@@ -1,0 +1,18 @@
+Package: poio
+Title: Input/Output Functionality for PO and POT Files
+Version: 0.0-1
+Authors@R: person("Richard", "Cotton", email = "richierocks@gmail.com", role = c("aut", "cre"))
+Description: Read and write PO and POT files, for package translations.
+Depends:
+    R (>= 3.2.5)
+Imports:
+    assertive.properties,
+    stringi
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Author: Richard Cotton, [aut,cre]
+Maintainer: Richard Cotton <richierocks@gmail.com>
+URL: https://github.com/RL10N/poio
+BugReports: https://github.com/RL10N/poio/issues
+RoxygenNote: 5.0.1
