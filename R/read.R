@@ -17,6 +17,9 @@
 #' "msgid_plural" and "msgstr".  The latter column contains a list of character
 #' vectors.}
 #' }
+#' @seealso \code{\link[tools]{xgettext}}
+#' @examples
+#' # TODO
 #' @importFrom assertive.properties is_non_empty
 #' @importFrom stringi stri_read_lines
 #' @importFrom stringi stri_detect_regex
@@ -42,46 +45,69 @@ read_po_file <- function(po_file)
   msgid_singular_index <- msgid_plural_index - 1
   msgid_direct_index <- setdiff(msgid_index, msgid_singular_index)
 
-  msgid_direct_matches = stri_match_first_regex(
-    lines[msgid_direct_index],
-    '^msgid +"(.+)"$'
-  )
+  if(is_non_empty(msgid_direct_index))
+  {
+    msgid_direct_matches = stri_match_first_regex(
+      lines[msgid_direct_index],
+      '^msgid +"(.+)"$'
+    )
 
-  msgstr_direct_matches = stri_match_first_regex(
-    lines[msgid_direct_index + 1],
-    '^msgstr +"(.*)"$'
-  )
+    msgstr_direct_matches = stri_match_first_regex(
+      lines[msgid_direct_index + 1],
+      '^msgstr +"(.*)"$'
+    )
 
-  # The print method for data frames doesn't handle UTF-8 chars well
-  # under Windows but the value is correct
-  msgs_direct <- data.frame(
-    msgid = msgid_direct_matches[, 2],
-    msgstr = msgstr_direct_matches[, 2]
-  )
+    # The print method for data frames doesn't handle UTF-8 chars well
+    # under Windows but the value is correct
+    msgs_direct <- data.frame(
+      msgid            = msgid_direct_matches[, 2],
+      msgstr           = msgstr_direct_matches[, 2],
+      stringsAsFactors = FALSE
+    )
+  } else
+  {
+    msgs_direct <- data.frame(
+      msgid            = character(),
+      msgstr           = character(),
+      stringsAsFactors = FALSE
+    )
+  }
 
-  msgid_singular_matches = stri_match_first_regex(
-    lines[msgid_singular_index],
-    '^msgid +"(.+)"$'
-  )
+  if(is_non_empty(msgid_plural_index))
+  {
+    msgid_singular_matches = stri_match_first_regex(
+      lines[msgid_singular_index],
+      '^msgid +"(.+)"$'
+    )
 
-  msgid_plural_matches = stri_match_first_regex(
-    lines[msgid_plural_index],
-    '^msgid_plural +"(.+)"$'
-  )
+    msgid_plural_matches = stri_match_first_regex(
+      lines[msgid_plural_index],
+      '^msgid_plural +"(.+)"$'
+    )
 
-  msgstr_countable_index <- which(stri_detect_regex(lines, "^msgstr\\["))
-  msgstr_countable_matches = stri_match_first_regex(
-    lines[msgstr_countable_index],
-    '^msgstr(?:\\[([0-9]+)\\])? +"(.*)"$'
-  )
-  msgstr_countable_grp <- cumsum(msgstr_countable_matches[, 2] == "0")
+    msgstr_countable_index <- which(stri_detect_regex(lines, "^msgstr\\["))
 
+    msgstr_countable_matches = stri_match_first_regex(
+      lines[msgstr_countable_index],
+      '^msgstr(?:\\[([0-9]+)\\])? +"(.*)"$'
+    )
+    msgstr_countable_grp <- cumsum(msgstr_countable_matches[, 2] == "0")
 
-  msgs_countable <- data.frame(
-    msgid = msgid_singular_matches[, 2],
-    msgid_plural = msgid_plural_matches[, 2]
-  )
-  msgs_countable$msgstr <- split(msgstr_countable_matches[, 3], msgstr_countable_grp)
+    msgs_countable <- data.frame(
+      msgid            = msgid_singular_matches[, 2],
+      msgid_plural     = msgid_plural_matches[, 2],
+      stringsAsFactors = FALSE
+    )
+    msgs_countable$msgstr <- split(msgstr_countable_matches[, 3], msgstr_countable_grp)
+  } else
+  {
+    msgs_countable <- data.frame(
+      msgid            = character(),
+      msgid_plural     = character(),
+      msgstr           = character(),
+      stringsAsFactors = FALSE
+    )
+  }
 
   structure(
     list(

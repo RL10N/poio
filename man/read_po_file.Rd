@@ -33,4 +33,10 @@ vectors.}
 \description{
 Reads .PO and .POT translation files.
 }
+\examples{
+# TODO
+}
+\seealso{
+\code{\link[tools]{xgettext}}
+}
 
