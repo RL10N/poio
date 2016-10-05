@@ -24,13 +24,37 @@ write_po_file.po <- function(po, po_file = NULL, ...)
       c(
         'msgid ""',
         'msgstr ""',
-        paste0(metadata$name, ': ', metadata$value, '\\n'),
+        paste0('"', metadata$name, ': ', metadata$value, '\\n"'),
         '',
         as.character(
-          apply(direct, 1, function(row) c(row[1], row[2], ''))
+          apply(
+            direct,
+            1,
+            function(row)
+            {
+              c(
+                paste0('msgid "', row[1], '"'),
+                paste0('msgstr "', row[2], '"'),
+                ''
+              )
+            }
+          )
         ),
         as.character(
-          apply(countable, 1, function(row) c(row[[1]], row[[2]], row[[3]], ''))
+          apply(
+            countable,
+            1,
+            function(row)
+            {
+              n_plurals <- length(row[[3]])
+              c(
+                paste0('msgid "', row[[1]], '"'),
+                paste0('msgid_plural "', row[[2]], '"'),
+                paste0("msgstr[", seq(0L, n_plurals - 1L), '] "', row[[3]], '"'),
+                ''
+              )
+            }
+          )
         )
       )
     }
