@@ -24,7 +24,7 @@ write_po_file.po <- function(po, po_file = NULL, ...)
       c(
         'msgid ""',
         'msgstr ""',
-        paste0(names(metadata), ': ', metadata, '\\n'),
+        paste0(metadata$name, ': ', metadata$value, '\\n'),
         '',
         as.character(
           apply(direct, 1, function(row) c(row[1], row[2], ''))

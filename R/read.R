@@ -8,9 +8,10 @@
 #' components:
 #' \describe{
 #' \item{type}{Either "r" or "c".  Guessed from the file name.}
-#' \item{metadata}{A named character vector of file metadata.}
-#' \item{direct}{A data frame of messages with a direct translation, with columns
-#' "msgid" and "msgstr".}
+#' \item{metadata}{A data frame of file metadata with columns "name" and
+#' "value".}
+#' \item{direct}{A data frame of messages with a direct translation, with
+#' columns "msgid" and "msgstr".}
 #' \item{countable}{A data frame of messages where the translation depends upon
 #' a countable value (as created by \code{ngettext}), with columns "msgid",
 #' "msgid_plural" and "msgstr".  The latter column contains a list of character
@@ -31,7 +32,7 @@ read_po_file <- function(po_file)
 
   metadata_lines <- lines[stri_detect_regex(lines, '^"')]
   metadata <- stri_match_first_regex(metadata_lines, '^"([a-zA-Z-]+): ?(.+)\\\\n"$')
-  metadata <- setNames(metadata[, 3], metadata[, 2])
+  metadata <- data.frame(name = metadata[, 3], value = metadata[, 2])
 
   # Ignore first instance of msgid, since it is blank
   msgid_index <- which(stri_detect_regex(lines, "^msgid "))[-1]
