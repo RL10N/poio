@@ -20,9 +20,10 @@ An object of class \code{po}, which is a list with the following
 components:
 \describe{
 \item{type}{Either "r" or "c".  Guessed from the file name.}
-\item{metadata}{A named character vector of file metadata.}
-\item{direct}{A data frame of messages with a direct translation, with columns
-"msgid" and "msgstr".}
+\item{metadata}{A data frame of file metadata with columns "name" and
+"value".}
+\item{direct}{A data frame of messages with a direct translation, with
+columns "msgid" and "msgstr".}
 \item{countable}{A data frame of messages where the translation depends upon
 a countable value (as created by \code{ngettext}), with columns "msgid",
 "msgid_plural" and "msgstr".  The latter column contains a list of character
