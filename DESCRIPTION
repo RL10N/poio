@@ -6,6 +6,7 @@ Description: Read and write PO and POT files, for package translations.
 Depends:
     R (>= 3.2.5)
 Imports:
+    assertive.base,
     assertive.properties,
     stringi
 License: GPL-3
