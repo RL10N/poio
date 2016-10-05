@@ -12,7 +12,7 @@ write_po_file(po, po_file = NULL, ...)
 \item{po_file}{A path to the po_file to be written, or NULL to automatically
 generate the path.}
 
-\item{...}{PAssed between methods. Not currently used.}
+\item{...}{Passed between methods. Not currently used.}
 }
 \value{
 The funcion is mostly invoked for the side-effect of writing a PO

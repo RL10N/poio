@@ -4,7 +4,7 @@
 #' @param po An object of class \code{po}.
 #' @param po_file A path to the po_file to be written, or NULL to automatically
 #' generate the path.
-#' @param ... PAssed between methods. Not currently used.
+#' @param ... Passed between methods. Not currently used.
 #' @return The funcion is mostly invoked for the side-effect of writing a PO
 #' file.  The lines that are written to file are also invisibly returned.
 #' @export
@@ -54,6 +54,13 @@ write_po_file.po <- function(po, po_file = NULL, ...)
     po_file <- file.path("po", paste0(if(po$type == "r") "R-", lang, file_ext))
     message("Writing to ", po_file)
   }
-  stri_write_lines(lines, po_file)
+  # stri_write_lines is faster, but doesn't support writing to connections
+  if(inherits(po_file, "connection"))
+  {
+    writeLines(lines, po_file)
+  } else
+  {
+    stri_write_lines(lines, po_file)
+  }
   invisible(lines)
 }
