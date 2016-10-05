@@ -35,7 +35,11 @@ read_po_file <- function(po_file)
 
   metadata_lines <- lines[stri_detect_regex(lines, '^"')]
   metadata <- stri_match_first_regex(metadata_lines, '^"([a-zA-Z-]+): ?(.+)\\\\n"$')
-  metadata <- data.frame(name = metadata[, 2], value = metadata[, 3])
+  metadata <- data.frame(
+    name = metadata[, 2],
+    value = metadata[, 3],
+    stringsAsFactors = FALSE
+  )
 
   # Ignore first instance of msgid, since it is blank
   msgid_index <- which(stri_detect_regex(lines, "^msgid "))[-1]
