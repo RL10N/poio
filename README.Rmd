@@ -1,0 +1,36 @@
+# **poio**: Read and Write "PO" Translation Files for R Packages
+
+R packages use a text file format with a `.po` extension to store translations of messages, warnings, and errors.  **poio** provides functionality to read in these files, fix the metadata, and write the objects back to file.
+
+## Installation
+
+
+## Functions
+
+`read_po` reads PO files into R, and stores them as an object of class `"po"` (see below for details).
+
+`fix_metadata` fixes the metadata in a `po` object.
+
+`write_po` writes `po` objects back to a PO file.
+
+## PO Objects
+
+`po` objects are lists with class `"po"` (to allow S3 methods), containing the following elements:
+
+- *type*: A string.  Either "r" or "c", depending upon whether the messages originated from R-level code, or C-level code.
+- *metadata*: A data frame of file metadata with columns "name" and "value".
+- *direct*: A data frame of messages with a direct translation, with columns "msgid" and "msgstr".
+- *countable*: A data frame of messages where the translation depends upon a countable value (as created by `ngettext`), with columns "msgid", "msgid_plural" and "msgstr".  The latter column contains a list of character vectors.
+
+## Examples
+
+TODO
+
+## See Also
+
+The [*msgtools*](http://github.com/RL10N/msgtools) package, which has higher level tools for working with messages and translations.
+
+## Acknowledgements
+
+This package was developed as part of the [*RL10N*](https://rl10n.github.io) project, funded by the [R Consortium](https://www.r-consortium.org/).
+

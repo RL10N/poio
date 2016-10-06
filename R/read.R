@@ -7,7 +7,8 @@
 #' @return An object of class \code{po}, which is a list with the following
 #' components:
 #' \describe{
-#' \item{type}{Either "r" or "c".  Guessed from the file name.}
+#' \item{type}{Either "r" or "c", depending upon whether the messages originated
+#' from R-level code, or C-level code.  Guessed from the file name.}
 #' \item{metadata}{A data frame of file metadata with columns "name" and
 #' "value".}
 #' \item{direct}{A data frame of messages with a direct translation, with
