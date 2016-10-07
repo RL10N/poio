@@ -1,11 +1,14 @@
 Package: poio
 Title: Input/Output Functionality for "PO" and "POT" Message Translation Files
 Version: 0.0-1
-Author: Richard Cotton, [aut,cre]
+Author:
+    Richard Cotton [aut,cre],
+    Thomas Leeper [aut]
 Maintainer: Richard Cotton <richierocks@gmail.com>
 URL: https://github.com/RL10N/poio
 BugReports: https://github.com/RL10N/poio/issues
-Authors@R: person("Richard", "Cotton", email = "richierocks@gmail.com", role = c("aut", "cre"))
+Authors@R: c(person("Richard", "Cotton", email = "richierocks@gmail.com", role = c("aut", "cre")),
+    person("Thomas", "Leeper", email = "thosjleeper@gmail.com", role = "aut"))
 Description: Read and write PO and POT files, for package translations.
 Depends:
     R (>= 3.2.5)
