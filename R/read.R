@@ -7,8 +7,12 @@
 #' @return An object of class \code{po}, which is a list with the following
 #' components:
 #' \describe{
-#' \item{type}{Either "r" or "c", depending upon whether the messages originated
-#' from R-level code, or C-level code.  Guessed from the file name.}
+#' \item{source_type}{Either "r" or "c", depending upon whether the messages
+#' originated from R-level code, or C-level code.  Determined from the file
+#' name.}
+#' \item{file_type}{Either "po" or "pot", depending upon whether the messages
+#' originated from a PO (language-specific) or POT (master translation) file.
+#' Determined from the file name.}
 #' \item{metadata}{A data frame of file metadata with columns "name" and
 #' "value".}
 #' \item{direct}{A data frame of messages with a direct translation, with
@@ -22,17 +26,24 @@
 #' @examples
 #' # TODO
 #' @importFrom assertive.properties is_non_empty
+#' @importFrom assertive.types assert_is_a_string
+#' @importFrom assertive.files assert_all_are_existing_files
+#' @importFrom pathological get_extension
 #' @importFrom stringi stri_read_lines
 #' @importFrom stringi stri_detect_regex
 #' @importFrom stringi stri_match_first_regex
 #' @export
 read_po_file <- function(po_file)
 {
+  assert_is_a_string(po_file)
+  assert_all_are_existing_files(po_file)
   lines <- stri_read_lines(po_file, "UTF-8")
 
-  msg_type <- ifelse(
-    substring(basename(po_file), 1, 2) == "R-", "r", "c"
+  base_file_name <- basename(po_file)
+  source_type <- ifelse(
+    substring(base_file_name, 1, 2) == "R-", "r", "c"
   )
+  file_type <- get_extension(base_file_name)
 
   metadata_lines <- lines[stri_detect_regex(lines, '^"')]
   metadata <- stri_match_first_regex(metadata_lines, '^"([a-zA-Z-]+): ?(.+)\\\\n"$')
@@ -116,7 +127,8 @@ read_po_file <- function(po_file)
 
   structure(
     list(
-      type = msg_type,
+      source_type = source_type,
+      file_type = file_type,
       metadata = metadata,
       direct = msgs_direct,
       countable = msgs_countable

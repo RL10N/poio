@@ -8,6 +8,9 @@ Depends:
 Imports:
     assertive.base,
     assertive.properties,
+    assertive.types,
+    assertive.files,
+    pathological,
     stringi
 License: GPL-3
 Encoding: UTF-8
@@ -17,3 +20,4 @@ Maintainer: Richard Cotton <richierocks@gmail.com>
 URL: https://github.com/RL10N/poio
 BugReports: https://github.com/RL10N/poio/issues
 RoxygenNote: 5.0.1
+Suggests: testthat

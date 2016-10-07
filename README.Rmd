@@ -17,7 +17,8 @@ R packages use a text file format with a `.po` extension to store translations o
 
 `po` objects are lists with class `"po"` (to allow S3 methods), containing the following elements:
 
-- *type*: A string.  Either "r" or "c", depending upon whether the messages originated from R-level code, or C-level code.
+- *source_type*: A string.  Either "r" or "c", depending upon whether the messages originated from R-level code, or C-level code.
+- *file_type*: Either "po" or "pot", depending upon whether the messages originated from a PO (language-specific) or POT (master translation) file. Determined from the file name.
 - *metadata*: A data frame of file metadata with columns "name" and "value".
 - *direct*: A data frame of messages with a direct translation, with columns "msgid" and "msgstr".
 - *countable*: A data frame of messages where the translation depends upon a countable value (as created by `ngettext`), with columns "msgid", "msgid_plural" and "msgstr".  The latter column contains a list of character vectors.
