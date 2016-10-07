@@ -1,4 +1,4 @@
-# **poio**: Read and Write "PO" Translation Files for R Packages
+# **poio**: Input/Output Functionality for "PO" and "POT" Message Translation Files
 
 R packages use a text file format with a `.po` extension to store translations of messages, warnings, and errors.  **poio** provides functionality to read in these files, fix the metadata, and write the objects back to file.
 
@@ -30,6 +30,10 @@ TODO
 ## See Also
 
 The [*msgtools*](http://github.com/RL10N/msgtools) package, which has higher level tools for working with messages and translations.
+
+The [*Pology*](http://pology.nedohodnik.net/doc/user/en_US/ch-poformat.html) python library.
+
+The GNU [*gettext*](https://www.gnu.org/software/gettext/manual/html_node/index.html) utility.
 
 ## Acknowledgements
 
