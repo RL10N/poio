@@ -67,6 +67,14 @@ fix_metadata.data.frame <- function(x, pkg = ".", file_type, ...)
     fix_mime_version() %>%
     fix_content_type() %>%
     fix_content_transfer_encoding()
+  if(file_type == "po")
+  {
+    lang <- x$value[x$name == "Language"]
+    # Can't fix the Language field, but we can check its validity
+    check_language(lang)
+    x <- x %>%
+      fix_plural_forms(x, lang)
+  }
   x
 }
 
@@ -157,14 +165,14 @@ fix_content_transfer_encoding <- function(x)
   fix_field(x, "Content-Transfer-Encoding", expected = "8bit")
 }
 
-fix_language <- function(x, lang)
-{
-  fix_field(x, "Language", lang)
-}
 
 fix_plural_forms <- function(x, lang)
 {
   expected <- lookup_plural_forms_for_language(lang)
+  if(is.na(expected)) # unknown lang, already warned about
+  {
+    return(x)
+  }
   fix_field(x, "Plural-Forms", expected)
 }
 
@@ -210,4 +218,19 @@ fix_field <- function(x, po_field, expected, pkg, desc_fields = character())
     x[x$name == po_field, "value"] <- expected
   }
   x
+}
+
+
+check_language <- function(lang)
+{
+  ok <- stri_detect_regex(lang, ALLOWED_LANGUAGE_REGEX)
+  if(!ok)
+  {
+    wrn <- gettextf(
+      "The language code %s is not supported by GNU gettext. See ?language_codes for possible values.",
+      lang
+    )
+    warning(wrn)
+  }
+  ok
 }

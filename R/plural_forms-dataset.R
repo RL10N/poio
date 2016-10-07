@@ -23,4 +23,25 @@
 #' @keywords datasets
 #' @name plural_forms
 #' @usage data(plural_forms)
+#' @examples
+#' e <- new.env()
+#' data(plural_forms, package = "poio", envir = e)
+#' e$plural_forms
 NULL
+
+lookup_plural_forms_for_language <- function(lang)
+{
+  e <- new.env()
+  data(plural_forms, package = "poio", envir = e)
+  if(lang %in% e$plural_forms$ISO)
+  {
+    with(e$plural_forms, PluralFormHeader[ISO == lang])
+  } else
+  {
+    msg <- gettextf(
+      "The plural form for language %s is unknown, and cannot be updated."
+    )
+    message(msg)
+    NA
+  }
+}

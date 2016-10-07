@@ -20,6 +20,11 @@ data(plural_forms)
 This dataset contains the known values for the "Plural-Forms" metadata
 elements in a PO file.
 }
+\examples{
+e <- new.env()
+data(plural_forms, package = "poio", envir = e)
+e$plural_forms
+}
 \references{
 This dataset was originally taken from
 \url{http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html}
