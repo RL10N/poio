@@ -59,11 +59,11 @@ write_po_file.po <- function(po, po_file = NULL, ...)
       )
     }
   )
-  if(is.null(po_file))
+  if(is.null(po_file)) # auto-generate file name
   {
     # POT files don't have a Language element in the metadata, but PO files do
     lang <- po$metadata["Language"]
-    if(is.na(lang))
+    if(po$file_type == "pot")
     {
       # Use pkg name instead of language
       lang <- stri_extract_first_regex(
