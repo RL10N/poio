@@ -23,7 +23,8 @@ Imports:
     stringi,
     utils
 Suggests:
-    testthat
+    testthat,
+    rebus.datetimes
 License: GPL-3
 Acknowledgements: Development of this package has been funded by the R Consortium (https://r-consortium.org).
 Encoding: UTF-8

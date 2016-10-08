@@ -76,7 +76,9 @@ test_that(
       class = c("po", "list")
     )
     pot <- read_po(pot_file)
-    actual <- fix_metadata(pot)
+    pkg <- devtools::as.package(system.file(package = "poio"))
+    expect_true(is.list(pkg))
+    actual <- fix_metadata(pot, pkg)
     # PO-Revision-Date is set to the current time.
     # Fake the value, then check that separately.
     actual_po_revision_date <- with(actual$metadata, value[name == "PO-Revision-Date"])
@@ -98,5 +100,17 @@ test_that(
       ),
       30
     )
+  }
+)
+
+test_that(
+  "write_po works on an empty POT file",
+  {
+    pot_file <- system.file("extdata/R-empty-raw.pot", package = "poio")
+
+    pot <- read_po(pot_file)
+    out_file <- tempfile("actual.pot")
+    write_po(pot, out_file)
+    expect_identical(readLines(out_file), readLines(pot_file))
   }
 )
