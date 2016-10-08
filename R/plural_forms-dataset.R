@@ -40,6 +40,10 @@ lookup_plural_forms_for_language <- function(lang)
   base_lang <- stri_extract_first_regex(lang, "^[a-z]{2,3}")
   if(lang %in% e$plural_forms$ISO)
   {
+    if(lang == "zh")
+    {
+      message('For Chinese, the plural form is set to "nplurals=1; plural=0;". However, in rare cases related to personal pronouns, there are two plural forms.  If this is applicable to your content, set it to "nplurals=2; plural=(n > 1);".')
+    }
     with(e$plural_forms, PluralFormHeader[ISO == lang])
   } else if(is_dialect && base_lang %in% e$plural_forms$ISO)
   {
