@@ -2,9 +2,11 @@
 
 S3method(fix_metadata,data.frame)
 S3method(fix_metadata,po)
+S3method(generate_po_from_pot,po)
 S3method(write_po,po)
 export(ALLOWED_LANGUAGE_REGEX)
 export(fix_metadata)
+export(generate_po_from_pot)
 export(read_po)
 export(read_pot)
 export(write_po)
