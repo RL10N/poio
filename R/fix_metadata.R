@@ -221,9 +221,10 @@ fix_field <- function(x, po_field, expected, pkg, desc_fields = character())
   x
 }
 
-
+#' @importFrom assertive.properties assert_is_a_string
 check_language <- function(lang)
 {
+  assert_is_a_string(lang, severity = "warning")
   ok <- stri_detect_regex(lang, ALLOWED_LANGUAGE_REGEX)
   if(!ok)
   {
