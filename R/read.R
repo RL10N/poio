@@ -33,7 +33,7 @@
 #' @importFrom stringi stri_detect_regex
 #' @importFrom stringi stri_match_first_regex
 #' @export
-read_po_file <- function(po_file)
+read_po <- function(po_file)
 {
   assert_is_a_string(po_file)
   assert_all_are_existing_files(po_file)
@@ -137,9 +137,9 @@ read_po_file <- function(po_file)
   )
 }
 
-#' @rdname read_po_file
+#' @rdname read_po
 #' @export
-read_pot_file <- function(pot_file = NULL)
+read_pot <- function(pot_file = NULL)
 {
   if(is.null(pot_file))
   {
@@ -150,5 +150,5 @@ read_pot_file <- function(pot_file = NULL)
       message("Reading ", pot_file)
     }
   }
-  read_po_file(pot_file)
+  read_po(pot_file)
 }

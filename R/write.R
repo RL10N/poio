@@ -8,15 +8,15 @@
 #' @return The funcion is mostly invoked for the side-effect of writing a PO
 #' file.  The lines that are written to file are also invisibly returned.
 #' @export
-write_po_file <- function(po, po_file = NULL, ...)
+write_po <- function(po, po_file = NULL, ...)
 {
-  UseMethod("write_po_file")
+  UseMethod("write_po")
 }
 
 #' @importFrom stringi stri_extract_first_regex
 #' @importFrom stringi stri_write_lines
 #' @export
-write_po_file.po <- function(po, po_file = NULL, ...)
+write_po.po <- function(po, po_file = NULL, ...)
 {
   lines <- with(
     po,
