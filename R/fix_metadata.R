@@ -233,5 +233,5 @@ check_language <- function(lang)
     )
     warning(wrn)
   }
-  ok
+  invisible(ok)
 }
