@@ -43,7 +43,7 @@ read_po <- function(po_file)
   source_type <- ifelse(
     substring(base_file_name, 1, 2) == "R-", "r", "c"
   )
-  file_type <- get_extension(base_file_name)
+  file_type <- unname(get_extension(base_file_name))
 
   metadata_lines <- lines[stri_detect_regex(lines, '^"')]
   metadata <- stri_match_first_regex(metadata_lines, '^"([a-zA-Z-]+): ?(.+)\\\\n"$')
