@@ -6,7 +6,8 @@
 #' generate the path.
 #' @param ... Passed between methods. Not currently used.
 #' @return The funcion is mostly invoked for the side-effect of writing a PO
-#' file.  The lines that are written to file are also invisibly returned.
+#' file.  The \code{po} argument is also invisibly returned, for convenience
+#' when this function is used in a pipe chain.
 #' @export
 write_po <- function(po, po_file = NULL, ...)
 {
@@ -78,7 +79,7 @@ write_po.po <- function(po, po_file = NULL, ...)
     po_file <- file.path("po", paste0(if(po$type == "r") "R-", lang, file_ext))
     message("Writing to ", po_file)
   }
-  # stri_write_lines is faster, but doesn't support writing to connections
+  # stri_write_lines is faster, but doesn't support writing to text connections
   if(inherits(po_file, "connection"))
   {
     writeLines(lines, po_file)
@@ -86,5 +87,5 @@ write_po.po <- function(po, po_file = NULL, ...)
   {
     stri_write_lines(lines, po_file)
   }
-  invisible(lines)
+  invisible(po)
 }

@@ -16,7 +16,8 @@ generate the path.}
 }
 \value{
 The funcion is mostly invoked for the side-effect of writing a PO
-file.  The lines that are written to file are also invisibly returned.
+file.  The \code{po} argument is also invisibly returned, for convenience
+when this function is used in a pipe chain.
 }
 \description{
 Writes and object of class \code{po} to a .po file.
