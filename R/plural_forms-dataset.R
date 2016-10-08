@@ -40,7 +40,8 @@ lookup_plural_forms_for_language <- function(lang)
   } else
   {
     msg <- gettextf(
-      "The plural form for language %s is unknown, and cannot be updated."
+      "The plural form for language %s is unknown, and cannot be updated.",
+      sQuote(lang)
     )
     message(msg)
     NA
