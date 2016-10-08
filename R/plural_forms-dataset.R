@@ -30,13 +30,25 @@
 NULL
 
 #' @importFrom utils data
+#' @importFrom stringi stri_detect_fixed
+#' @importFrom stringi stri_extract_first_regex
 lookup_plural_forms_for_language <- function(lang)
 {
   e <- new.env()
   data(plural_forms, package = "poio", envir = e)
+  is_dialect <- stri_detect_fixed(lang, "_")
+  base_lang <- stri_extract_first_regex(lang, "^[a-z]{2,3}")
   if(lang %in% e$plural_forms$ISO)
   {
     with(e$plural_forms, PluralFormHeader[ISO == lang])
+  } else if(is_dialect && base_lang %in% e$plural_forms$ISO)
+  {
+    msg <- gettextf(
+      "Using the plural forms for the generic language, %s.",
+      sQuote(base_lang)
+    )
+    message(msg)
+    with(e$plural_forms, PluralFormHeader[ISO == base_lang])
   } else
   {
     msg <- gettextf(
