@@ -41,7 +41,7 @@ The \code{country} element is identical to ISO 3166-1 alpha-2.
 \examples{
 # The dataset contains:
 e <- new.env()
-data(language_codes, package = "poio", envir = e)
+utils::data(language_codes, package = "poio", envir = e)
 e$language_codes
 
 # Allowed values in the language field can be matched against this regex:

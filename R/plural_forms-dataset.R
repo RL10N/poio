@@ -29,6 +29,7 @@
 #' e$plural_forms
 NULL
 
+#' @importFrom utils data
 lookup_plural_forms_for_language <- function(lang)
 {
   e <- new.env()

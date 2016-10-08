@@ -20,7 +20,8 @@ Imports:
     devtools,
     magrittr,
     pathological,
-    stringi
+    stringi,
+    utils
 Suggests:
     testthat
 License: GPL-3
