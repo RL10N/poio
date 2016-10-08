@@ -47,6 +47,7 @@ fix_metadata.po <- function(x, pkg = ".", ...)
   x
 }
 
+#' @rdname fix_metadata
 #' @importFrom assertive.base coerce_to
 #' @importFrom devtools as.package
 #' @importFrom magrittr %>%

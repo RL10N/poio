@@ -2,9 +2,12 @@
 % Please edit documentation in R/fix_metadata.R
 \name{fix_metadata}
 \alias{fix_metadata}
+\alias{fix_metadata.data.frame}
 \title{Fix metadata in a PO object}
 \usage{
 fix_metadata(x, pkg = ".", ...)
+
+\method{fix_metadata}{data.frame}(x, pkg = ".", file_type, ...)
 }
 \arguments{
 \item{x}{An object of class \code{po}, or the data frame from the
