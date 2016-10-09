@@ -1,9 +1,27 @@
+[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/0.1.0/active.svg)](http://www.repostatus.org/#active)
+
 # **poio**: Input/Output Functionality for "PO" and "POT" Message Translation Files
 
 R packages use a text file format with a `.po` extension to store translations of messages, warnings, and errors.  **poio** provides functionality to read in these files, fix the metadata, and write the objects back to file.
 
 ## Installation
 
+To install the development version, you first need the *devtools* package.
+
+
+```r
+install.packages("devtools")
+```
+
+```
+## Error in install.packages : Updating loaded packages
+```
+
+Then you can install the **poio** package using
+
+
+```r
+devtools::install_bitbucket("RL10N/poio")
 
 ## Functions
 
@@ -28,7 +46,14 @@ R packages use a text file format with a `.po` extension to store translations o
 ## Examples
 
 A typical workflow begins by generating a POT master translation file for a package using `tools::xgettext2pot`.  In this case, we'll use a sample file stored in the **poio** package.
+```
 
+```
+## Error: <text>:5:11: unexpected symbol
+## 4: 
+## 5: `read_po` reads
+##              ^
+```
 
 ```r
 pot_file <- system.file("extdata/R-poio.pot")
