@@ -60,6 +60,6 @@ lookup_plural_forms_for_language <- function(lang)
       sQuote(lang)
     )
     message(msg)
-    NA
+    NA_character_
   }
 }
