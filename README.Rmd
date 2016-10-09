@@ -16,6 +16,7 @@ Then you can install the **poio** package using
 
 ```{r, eval = FALSE}
 devtools::install_bitbucket("RL10N/poio")
+```
 
 ## Functions
 

@@ -13,15 +13,12 @@ To install the development version, you first need the *devtools* package.
 install.packages("devtools")
 ```
 
-```
-## Error in install.packages : Updating loaded packages
-```
-
 Then you can install the **poio** package using
 
 
 ```r
 devtools::install_bitbucket("RL10N/poio")
+```
 
 ## Functions
 
@@ -46,14 +43,7 @@ devtools::install_bitbucket("RL10N/poio")
 ## Examples
 
 A typical workflow begins by generating a POT master translation file for a package using `tools::xgettext2pot`.  In this case, we'll use a sample file stored in the **poio** package.
-```
 
-```
-## Error: <text>:5:11: unexpected symbol
-## 4: 
-## 5: `read_po` reads
-##              ^
-```
 
 ```r
 pot_file <- system.file("extdata/R-poio.pot")
