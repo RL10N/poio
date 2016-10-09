@@ -9,20 +9,17 @@
 #' followed by an underscore and a country code taken from the \code{country}
 #' element of this dataset.
 #'
-#' @format \code{language_codes} is a list with three character vector elements.
+#' @format \code{language_codes} is a list with two character vector elements.
 #' \describe{
-#' \item{usual_lang}{Lowercase two letter ISO 639-1 codes representing
-#' languages.}
-#' \item{rare_lang}{Lowercase three letter ISO 639-2 codes representing
-#' languages.}
+#' \item{language}{Lowercase two letter ISO 639-1 codes, and some lowercase
+#' three letter ISO 639-2 codes representing languages.}
 #' \item{country}{Uppercase two letter ISO 3166-1 alpha-2 code representing
 #' countries and territories.}
 #' }
-#' @note The \code{usual_lang} element of the dataset contains all of ISO 639-1
-#' as well as the value "mo", for "Moldavian", which isn't an official ISO
-#' code.
-#' The \code{rare_lang} element is only a small subset of ISO 639-2, for cases
-#' where there is no ISO 629-1 code.
+#' @note The \code{language} element of the dataset contains all of ISO 639-1 as
+#' well as the value "mo", for "Moldavian", which isn't an official ISO code.
+#' It also contains a subset of ISO 639-2, for rare languages where there is
+#' no ISO 629-1 code.
 #' The \code{country} element is identical to ISO 3166-1 alpha-2.
 #' @references The dataset was generated from these the contents of these
 #' webpages:
@@ -39,8 +36,9 @@
 #' utils::data(language_codes, package = "poio", envir = e)
 #' e$language_codes
 #'
-#' # Allowed values in the language field can be matched against this regex:
-#' ALLOWED_LANGUAGE_REGEX
+#' # Allowed values in the language field can be matched like this
+#' # (though it will be automatically done in generate_po_from_pot)
+#' stringi::stri_detect_regex(c("it", "nl_BE", "xxx"), ALLOWED_LANGUAGE_REGEX)
 NULL
 
 
@@ -52,11 +50,11 @@ NULL
 # with(
 #   e$language_codes,
 #   exactly(
-#     or1(c(usual_lang, rare_lang)) %R%
+#     or1(language) %R%
 #       optional(group("_" %R% or1(country)))
 #   )
 # )
 
 #' @rdname language_codes
 #' @export
-ALLOWED_LANGUAGE_REGEX <- "^(?:aa|ab|ae|af|ak|am|an|ar|as|av|ay|az|ba|be|bg|bh|bi|bm|bn|bo|br|bs|ca|ce|ch|co|cr|cs|cu|cv|cy|da|de|dv|dz|ee|el|en|eo|es|et|eu|fa|ff|fi|fj|fo|fr|fy|ga|gd|gl|gn|gu|gv|ha|he|hi|ho|hr|ht|hu|hy|hz|ia|id|ie|ig|ii|ik|io|is|it|iu|ja|jv|ka|kg|ki|kj|kk|kl|km|kn|ko|kr|ks|ku|kv|kw|ky|la|lb|lg|li|ln|lo|lt|lu|lv|mg|mh|mi|mk|ml|mn|mo|mr|ms|mt|my|na|nb|nd|ne|ng|nl|nn|no|nr|nv|ny|oc|oj|om|or|os|pa|pi|pl|ps|pt|qu|rm|rn|ro|ru|rw|sa|sc|sd|se|sg|si|sk|sl|sm|sn|so|sq|sr|ss|st|su|sv|sw|ta|te|tg|th|ti|tk|tl|tn|to|tr|ts|tt|tw|ty|ug|uk|ur|uz|ve|vi|vo|wa|wo|xh|yi|yo|za|zh|zu|ace|awa|bal|ban|bej|bem|bho|bik|bin|bug|ceb|din|doi|fil|fon|gon|gsw|hil|hmn|ilo|kab|kam|kbd|kmb|kok|kru|lua|luo|mad|mag|mai|mak|man|men|min|mni|mos|mwr|nap|nso|nym|nyn|pag|pam|raj|sas|sat|scn|shn|sid|srr|suk|sus|tem|tiv|tum|umb|wal|war|yao)(?:_(?:AD|AE|AF|AG|AI|AL|AM|AO|AQ|AR|AS|AT|AU|AW|AX|AZ|BA|BB|BD|BE|BF|BG|BH|BI|BJ|BL|BM|BN|BO|BQ|BR|BS|BT|BV|BW|BY|BZ|CA|CC|CD|CF|CG|CH|CI|CK|CL|CM|CN|CO|CR|CU|CV|CW|CX|CY|CZ|DE|DJ|DK|DM|DO|DZ|EC|EE|EG|EH|ER|ES|ET|FI|FJ|FK|FM|FO|FR|GA|GB|GD|GE|GF|GG|GH|GI|GL|GM|GN|GP|GQ|GR|GS|GT|GU|GW|GY|HK|HM|HN|HR|HT|HU|ID|IE|IL|IM|IN|IO|IQ|IR|IS|IT|JE|JM|JO|JP|KE|KG|KH|KI|KM|KN|KP|KR|KW|KY|KZ|LA|LB|LC|LI|LK|LR|LS|LT|LU|LV|LY|MA|MC|MD|ME|MF|MG|MH|MK|ML|MM|MN|MO|MP|MQ|MR|MS|MT|MU|MV|MW|MX|MY|MZ|NA|NC|NE|NF|NG|NI|NL|NO|NP|NR|NU|NZ|OM|PA|PE|PF|PG|PH|PK|PL|PM|PN|PR|PS|PT|PW|PY|QA|RE|RO|RS|RU|RW|SA|SB|SC|SD|SE|SG|SH|SI|SJ|SK|SL|SM|SN|SO|SR|SS|ST|SV|SX|SY|SZ|TC|TD|TF|TG|TH|TJ|TK|TL|TM|TN|TO|TR|TT|TV|TW|TZ|UA|UG|UM|US|UY|UZ|VA|VC|VE|VG|VI|VN|VU|WF|WS|YE|YT|ZA|ZM|ZW))?$"
+ALLOWED_LANGUAGE_REGEX <- "^(?:aa|ab|ace|ae|af|ak|am|an|ar|as|av|awa|ay|az|ba|bal|ban|be|bej|bem|bg|bh|bho|bi|bik|bin|bm|bn|bo|br|bs|bug|ca|ce|ceb|ch|co|cr|cs|cu|cv|cy|da|de|din|doi|dv|dz|ee|el|en|eo|es|et|eu|fa|ff|fi|fil|fj|fo|fon|fr|fy|ga|gd|gl|gn|gon|gsw|gu|gv|ha|he|hi|hil|hmn|ho|hr|ht|hu|hy|hz|ia|id|ie|ig|ii|ik|ilo|io|is|it|iu|ja|jv|ka|kab|kam|kbd|kg|ki|kj|kk|kl|km|kmb|kn|ko|kok|kr|kru|ks|ku|kv|kw|ky|la|lb|lg|li|ln|lo|lt|lu|lua|luo|lv|mad|mag|mai|mak|man|men|mg|mh|mi|min|mk|ml|mn|mni|mo|mos|mr|ms|mt|mwr|my|na|nap|nb|nd|ne|ng|nl|nn|no|nr|nso|nv|ny|nym|nyn|oc|oj|om|or|os|pa|pag|pam|pi|pl|ps|pt|qu|raj|rm|rn|ro|ru|rw|sa|sas|sat|sc|scn|sd|se|sg|shn|si|sid|sk|sl|sm|sn|so|sq|sr|srr|ss|st|su|suk|sus|sv|sw|ta|te|tem|tg|th|ti|tiv|tk|tl|tn|to|tr|ts|tt|tum|tw|ty|ug|uk|umb|ur|uz|ve|vi|vo|wa|wal|war|wo|xh|yao|yi|yo|za|zh|zu)(?:_(?:AD|AE|AF|AG|AI|AL|AM|AO|AQ|AR|AS|AT|AU|AW|AX|AZ|BA|BB|BD|BE|BF|BG|BH|BI|BJ|BL|BM|BN|BO|BQ|BR|BS|BT|BV|BW|BY|BZ|CA|CC|CD|CF|CG|CH|CI|CK|CL|CM|CN|CO|CR|CU|CV|CW|CX|CY|CZ|DE|DJ|DK|DM|DO|DZ|EC|EE|EG|EH|ER|ES|ET|FI|FJ|FK|FM|FO|FR|GA|GB|GD|GE|GF|GG|GH|GI|GL|GM|GN|GP|GQ|GR|GS|GT|GU|GW|GY|HK|HM|HN|HR|HT|HU|ID|IE|IL|IM|IN|IO|IQ|IR|IS|IT|JE|JM|JO|JP|KE|KG|KH|KI|KM|KN|KP|KR|KW|KY|KZ|LA|LB|LC|LI|LK|LR|LS|LT|LU|LV|LY|MA|MC|MD|ME|MF|MG|MH|MK|ML|MM|MN|MO|MP|MQ|MR|MS|MT|MU|MV|MW|MX|MY|MZ|NA|NC|NE|NF|NG|NI|NL|NO|NP|NR|NU|NZ|OM|PA|PE|PF|PG|PH|PK|PL|PM|PN|PR|PS|PT|PW|PY|QA|RE|RO|RS|RU|RW|SA|SB|SC|SD|SE|SG|SH|SI|SJ|SK|SL|SM|SN|SO|SR|SS|ST|SV|SX|SY|SZ|TC|TD|TF|TG|TH|TJ|TK|TL|TM|TN|TO|TR|TT|TV|TW|TZ|UA|UG|UM|US|UY|UZ|VA|VC|VE|VG|VI|VN|VU|WF|WS|YE|YT|ZA|ZM|ZW))?$"

@@ -1,12 +1,13 @@
 # Make a list of all known languages.
 # This is currently
-# 1. ISO 639-1 two letter language codes + optional ISO 3166 alpha-2 country codes
-# 2. ISO 639-2 three letter language codes
+# 1. ISO 639-1 two letter language codes, or
+# 2. Some ISO 639-2 three letter language codes
+# In either case, an optional ISO 3166 alpha-2 country code suffix is allowed.
 #
 # The easiest thing to do would be to grab these datasets from the ISOcodes
-# package.  However, it isn't clear whether GNU gettext supports all these
-# languages.  From the documentation, it looks like at leastISO 639-2 isn't
-# completely supported.
+# package.  However, GNU gettext doesn't supports all these languages.  For
+# example, ISO 639-2 is only supported for rare languages where there is no ISO
+# 629-1 code.
 # Consequently we scrape the online documentation instead.
 
 library(httr)
@@ -30,6 +31,15 @@ language_codes <- lapply(
       xml_nodes(xpath = "//samp") %>%
       xml_text()
   }
+)
+
+# For convenience, merge usual and rare languages
+language_codes <- with(
+  language_codes,
+  list(
+    language = sort(c(usual_lang, rare_lang)),
+    country = country
+  )
 )
 
 save(language_codes, file = "data/language_codes.RData")

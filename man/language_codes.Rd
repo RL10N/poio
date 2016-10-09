@@ -5,12 +5,10 @@
 \alias{ALLOWED_LANGUAGE_REGEX}
 \alias{language_codes}
 \title{Language codes supported by GNU gettext}
-\format{\code{language_codes} is a list with three character vector elements.
+\format{\code{language_codes} is a list with two character vector elements.
 \describe{
-\item{usual_lang}{Lowercase two letter ISO 639-1 codes representing
-languages.}
-\item{rare_lang}{Lowercase three letter ISO 639-2 codes representing
-languages.}
+\item{language}{Lowercase two letter ISO 639-1 codes, and some lowercase
+three letter ISO 639-2 codes representing languages.}
 \item{country}{Uppercase two letter ISO 3166-1 alpha-2 code representing
 countries and territories.}
 }}
@@ -31,11 +29,10 @@ followed by an underscore and a country code taken from the \code{country}
 element of this dataset.
 }
 \note{
-The \code{usual_lang} element of the dataset contains all of ISO 639-1
-as well as the value "mo", for "Moldavian", which isn't an official ISO
-code.
-The \code{rare_lang} element is only a small subset of ISO 639-2, for cases
-where there is no ISO 629-1 code.
+The \code{language} element of the dataset contains all of ISO 639-1 as
+well as the value "mo", for "Moldavian", which isn't an official ISO code.
+It also contains a subset of ISO 639-2, for rare languages where there is
+no ISO 629-1 code.
 The \code{country} element is identical to ISO 3166-1 alpha-2.
 }
 \examples{
@@ -44,8 +41,9 @@ e <- new.env()
 utils::data(language_codes, package = "poio", envir = e)
 e$language_codes
 
-# Allowed values in the language field can be matched against this regex:
-ALLOWED_LANGUAGE_REGEX
+# Allowed values in the language field can be matched like this
+# (though it will be automatically done in generate_po_from_pot)
+stringi::stri_detect_regex(c("it", "nl_BE", "xxx"), ALLOWED_LANGUAGE_REGEX)
 }
 \references{
 The dataset was generated from these the contents of these
