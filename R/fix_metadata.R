@@ -221,7 +221,7 @@ fix_field <- function(x, po_field, expected, pkg, desc_fields = character())
   x
 }
 
-#' @importFrom assertive.properties assert_is_a_string
+#' @importFrom assertive.types assert_is_a_string
 check_language <- function(lang)
 {
   assert_is_a_string(lang, severity = "warning")

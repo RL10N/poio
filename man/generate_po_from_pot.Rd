@@ -7,7 +7,7 @@
 \usage{
 generate_po_from_pot(x, lang, ...)
 
-\method{generate_po_from_pot}{po}(x, ...)
+\method{generate_po_from_pot}{po}(x, lang, ...)
 }
 \arguments{
 \item{x}{An object of class \code{po}, as read by \code{\link{read_po}} from
