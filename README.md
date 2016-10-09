@@ -29,27 +29,37 @@ R packages use a text file format with a `.po` extension to store translations o
 
 A typical workflow begins by generating a POT master translation file for a package using `tools::xgettext2pot`.  In this case, we'll use a sample file stored in the **poio** package.
 
-```{r, eval = FALSE}
+
+```r
 pot_file <- system.file("extdata/R-poio.pot")
 pot <- read_po(pot_file)
 ```
 
 `tools::xgettext2pot` makes a mess of some of the metadata element that it generates, so they need fixing.
 
-```{r, eval = FALSE}
+
+```r
 pot_fixed <- fix_metadata(pot)
 ```
 
 Now you need to choose some languages to translate your messages into.  Suitable language codes can be found in the `language_codes` dataset included in the package.
 
-```{r}
+
+```r
 data(language_codes)
 str(language_codes, vec.len = 8)
 ```
 
+```
+## List of 2
+##  $ language: chr [1:245] "aa" "ab" "ace" "ae" "af" "ak" "am" "an" ...
+##  $ country : chr [1:249] "AD" "AE" "AF" "AG" "AI" "AL" "AM" "AO" ...
+```
+
 Then, for each language that you want to create a translation for, generate a `po` object and write it to file. If your current working directory is the root of your package, the correct file name is automatically generated.
 
-```{r, eval = FALSE}
+
+```r
 for(lang in c("de", "fr_BE"))
 {
   po <- generate_po_from_pot(pot, lang)
