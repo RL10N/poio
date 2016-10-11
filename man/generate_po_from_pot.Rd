@@ -13,6 +13,9 @@ generate_po_from_pot(x, lang, ...)
 \item{x}{An object of class \code{po}, as read by \code{\link{read_po}} from
 a POT file.}
 
+\item{lang}{A language code, possibly with a country code attached. See
+\code{\link{language_codes}} for possible values.}
+
 \item{...}{Currently unused.}
 }
 \value{

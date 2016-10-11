@@ -3,6 +3,8 @@
 #' Generates a PO object from a POT object.
 #' @param x An object of class \code{po}, as read by \code{\link{read_po}} from
 #' a POT file.
+#' @param lang A language code, possibly with a country code attached. See
+#' \code{\link{language_codes}} for possible values.
 #' @param ... Currently unused.
 #' @return An object of class \code{po}, ready to be written to a PO file by
 #' \code{\link{write_po}}.
@@ -26,12 +28,8 @@ generate_po_from_pot.po <- function(x, lang, ...)
   plural_forms <- lookup_plural_forms_for_language(lang)
   if("Language" %in% x$metadata$name)
   {
-    x$metadata <- within(
-      x$metadata,
-      {
-        value[name == "Language"] <- lang
-      }
-    )
+    # Hmm. Should maybe write this using dplyr at some point.
+    x$metadata$value[x$metadata$name == "Language"] <- lang
   } else
   {
     x$metadata <- rbind(
@@ -41,17 +39,16 @@ generate_po_from_pot.po <- function(x, lang, ...)
   }
   if("Plural-Forms" %in% x$metadata$name)
   {
-    x$metadata <- within(
-      x$metadata,
-      {
-        value[name == "Plural-Forms"] <- plural_forms
-      }
-    )
+    x$metadata$value[x$metadata$name == "Plural-Forms"] <- plural_forms
   } else
   {
     x$metadata <- rbind(
       x$metadata,
-      data.frame(name = "Plural-Forms", value = plural_forms, stringsAsFactors = FALSE)
+      data.frame(
+        name = "Plural-Forms",
+        value = plural_forms,
+        stringsAsFactors = FALSE
+      )
     )
   }
   x
