@@ -24,7 +24,7 @@ generate_po_from_pot <- function(x, lang, ...)
 generate_po_from_pot.po <- function(x, lang, ...)
 {
   check_language(lang)
-  x$file_type <- "pot"
+  x$file_type <- "po"
   plural_forms <- lookup_plural_forms_for_language(lang)
   if("Language" %in% x$metadata$name)
   {
