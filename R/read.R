@@ -136,19 +136,3 @@ read_po <- function(po_file)
     class = c("po", "list")
   )
 }
-
-#' @rdname read_po
-#' @export
-read_pot <- function(pot_file = NULL)
-{
-  if(is.null(pot_file))
-  {
-    pot_files <- dir("po", pattern = "\\.pot$", full.names = TRUE)
-    if(is_non_empty(pot_files))
-    {
-      pot_file <- pot_files[1]
-      message("Reading ", pot_file)
-    }
-  }
-  read_po(pot_file)
-}

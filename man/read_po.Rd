@@ -2,12 +2,9 @@
 % Please edit documentation in R/read.R
 \name{read_po}
 \alias{read_po}
-\alias{read_pot}
 \title{Read PO and POT files}
 \usage{
 read_po(po_file)
-
-read_pot(pot_file = NULL)
 }
 \arguments{
 \item{po_file}{A string giving a path to a PO file.}
