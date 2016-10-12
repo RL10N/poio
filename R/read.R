@@ -46,7 +46,7 @@ read_po <- function(po_file)
   file_type <- unname(get_extension(base_file_name))
 
   metadata_lines <- lines[stri_detect_regex(lines, '^"')]
-  metadata <- stri_match_first_regex(metadata_lines, '^"([a-zA-Z-]+): ?(.+)\\\\n"$')
+  metadata <- stri_match_first_regex(metadata_lines, '^"([a-zA-Z-]+): *(.+)\\\\n"$')
   metadata <- data.frame(
     name = metadata[, 2],
     value = metadata[, 3],
