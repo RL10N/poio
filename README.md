@@ -34,11 +34,28 @@ devtools::install_bitbucket("RL10N/poio")
 
 `po` objects are lists with class `"po"` (to allow S3 methods), containing the following elements:
 
-- *source_type*: A string.  Either "r" or "c", depending upon whether the messages originated from R-level code, or C-level code.
-- *file_type*: Either "po" or "pot", depending upon whether the messages originated from a PO (language-specific) or POT (master translation) file. Determined from the file name.
-- *metadata*: A data frame of file metadata with columns "name" and "value".
-- *direct*: A data frame of messages with a direct translation, with columns "msgid" and "msgstr".
-- *countable*: A data frame of messages where the translation depends upon a countable value (as created by `ngettext`), with columns "msgid", "msgid_plural" and "msgstr".  The latter column contains a list of character vectors.
+- *source_type*: A string.  Either `"r"` or `"c"`, depending upon whether the messages originated from R-level code, or C-level code.
+- *file_type*: Either `"po"` or `"pot"`, depending upon whether the messages originated from a PO (language-specific) or POT (master translation) file. Determined from the file name.
+- *initial_comments*: A `character` vector of comments added by the translator.
+- *metadata*: A `data_frame` of file metadata with columns "name" and "value".
+- *direct*: A `data_frame` of messages with a direct translation, as created by `stop`,
+`warning`, `message` or`gettext`; its columns are described below.
+- *countable*: A `data_frame`of messages where the translation depends upon a countable value, as created by `ngettext`; its columns are described below.
+
+The `direct` element of the `po` object has the following columns.
+
+- *msgid*: Character. The untranslated (should be American English) message.
+- *msgstr*: Character. The translated message, or empty strings in the case of POT files.
+- *is_obsolete*: Logical. Is the message obsolete?
+- *translator_comments*: List of character. Comments added by the translator, typically to explain unclear messages, or why translation choices were made.
+- *source_reference_comments*: List of character. Links to where the message occured in the source, in the form "filename:line".
+- *flags_comments*: List of character. Typically used to describe formatting directives. R uses C-style formatting, which would imply a `"c-format"` flag.  For example `%d` denotes an integer, and `%s` denotes a string. `"fuzzy"` flags can appear when PO files are merged.
+- *previous_string_comment*: List of character. When PO files are merged with an updated POT file ,and a fuzzy flag is generated, the old msgid is stored in a previous string comment.
+
+The `countable` element of the `po` object takes the same form as the `direct` element, with two differences.
+
+- *msgid_plural*: Character. The plural form of the untranslated message.
+- *msgstr*: This is now a list of character (rather than character.)
 
 ## Examples
 
