@@ -4,7 +4,7 @@ RX <- list(
   msgid_plural             = '^(?:#~)? *msgid_plural *"(.+)"$',
   msgstr_direct            = '^(?:#~)? *msgstr *" *(.*)"$',
   msgstr_countable         = '^(?:#~)? *msgstr(?:\\[([0-9]+)\\])? *"(.*)"$',
-  translator_comment       = "^#[^\\p{P}] *(.+)$", # hash, then not punctuation
+  translator_comment       = "^#(?=[^,:|~]) *(.+)$",
   source_reference_comment = "^#: *(.+)$",
   flags_comment            = "^#, *(.+)$",
   previous_string_comment  = "^#\\| *(.+)$",
