@@ -44,6 +44,7 @@ msgstr[1]    ""
 
 # Testing quote escaping
 msgid "Had a \"band\"" and we tried real hard"
+msgstr ""
 
 #~ msgid "Jimmy quit and Jody got married"
 #~ msgstr ""

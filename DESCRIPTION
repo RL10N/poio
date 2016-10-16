@@ -18,9 +18,11 @@ Imports:
     assertive.types,
     assertive.files,
     devtools,
+    dplyr,
     magrittr,
     pathological,
     stringi,
+    tibble,
     utils
 Suggests:
     testthat,
