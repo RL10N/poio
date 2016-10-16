@@ -1,5 +1,6 @@
 # This is a translator comment before the metadata.
-# This is another one.
+# Other comment types aren't useful here, and should be ignored.
+# Like the "fuzzy" flags comment below.
 #, fuzzy
 msgid ""
 msgstr ""
@@ -19,18 +20,23 @@ msgstr ""
 msgid "I got my first real six-string"
 msgstr ""
 
-msgid "Bought it at the five-and-dime"
+
+
+
+#        This one gets a "c-format" flags comment
+#because it uses c-style sprintf formatting
+#, c-format
+msgid "Bought it at the %f-and-dime"
 msgstr ""
 
 # I don't think that the tools package supports generating
 # source reference comments, but we should preserve them
-# in case some fool manually inserts them into their file
+# in case someone manually inserts them into their file
 #: some_source_file.R:123
 msgid "Played it till my fingers bled"
 msgstr ""
 
-# This one gets a "c-format" flags comment
-# because it uses c-style sprintf formatting
+# Also uses xgettextf
 #, c-format
 msgid "It was the summer of '%d."
 msgstr ""
@@ -46,5 +52,13 @@ msgstr[1]    ""
 msgid "Had a \"band\"" and we tried real hard"
 msgstr ""
 
+# Obsolete messages can also have other comments
 #~ msgid "Jimmy quit and Jody got married"
 #~ msgstr ""
+
+# Countably obsolete. Apologies for bad English.
+# Also note the bad number order.
+#~ msgid "I should've known we'd never get far"
+#~ msgid_plural "I should've known we'd never get fars"
+#~ msgstr[1]""
+#~ msgstr[0]         ""

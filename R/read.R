@@ -1,24 +1,23 @@
 RX <- list(
   metadata                 = '^"([a-zA-Z-]+): *(.+)\\\\n"$',
-  msgid                    = '^msgid *"(.+)"$',
-  msgid_plural             = '^msgid_plural *"(.+)"$',
-  msgstr_direct            = '^msgstr *" *(.*)"$',
-  msgstr_countable         = '^msgstr(?:\\[([0-9]+)\\])? *"(.*)"$',
+  msgid                    = '^(#~)? *msgid *"(.+)"$',
+  msgid_plural             = '^(?:#~)? *msgid_plural *"(.+)"$',
+  msgstr_direct            = '^(?:#~)? *msgstr *" *(.*)"$',
+  msgstr_countable         = '^(?:#~)? *msgstr(?:\\[([0-9]+)\\])? *"(.*)"$',
   translator_comment       = "^#[^\\p{P}] *(.+)$", # hash, then not punctuation
   source_reference_comment = "^#: *(.+)$",
   flags_comment            = "^#, *(.+)$",
   previous_string_comment  = "^#\\| *(.+)$",
-  obsolete_comment         = "^#~ *(.+)$",
   blank                    = "^ *$"
 )
 
 #' @importFrom magrittr extract
 #' @importFrom stringi stri_match_first_regex
-match_and_extract <- function(x, rx)
+match_and_extract <- function(x, rx, drop = TRUE)
 {
   x %>%
     stri_match_first_regex(rx) %>%
-    extract(!is.na(.[, 2]), 2L)
+    extract(!is.na(.[, 1L]), -1L, drop = drop)
 }
 
 #' Read PO and POT files
@@ -36,15 +35,48 @@ match_and_extract <- function(x, rx)
 #' \item{file_type}{Either "po" or "pot", depending upon whether the messages
 #' originated from a PO (language-specific) or POT (master translation) file.
 #' Determined from the file name.}
-#' \item{metadata}{A data frame of file metadata with columns "name" and
-#' "value".}
-#' \item{direct}{A data frame of messages with a direct translation, with
-#' columns "msgid" and "msgstr".}
+#' \item{initial_comments}{A character vector of comments added by the
+#' translator.}
+#' \item{metadata}{A \code{\link[tibble]{data_frame}} of file metadata with
+#' columns "name" and "value".}
+#' \item{direct}{A \code{\link[tibble]{data_frame}} of messages with a direct
+#' translation, as created by \code{\link[base]{stop}},
+#' \code{\link[base]{warning}}, \code{\link[base]{message}} or
+#' \code{\link[base]{gettext}}; its columns are described below.}
 #' \item{countable}{A data frame of messages where the translation depends upon
-#' a countable value (as created by \code{ngettext}), with columns "msgid",
-#' "msgid_plural" and "msgstr".  The latter column contains a list of character
-#' vectors.}
+#' a countable value, as created by \code{\link[base]{ngettext}}; its columns are
+#' described below.}
 #' }
+#'
+#' The \code{direct} element of the \code{po} object has the following columns.
+#' \describe{
+#' \item{msgid}{Character. The untranslated (should be American English)
+#' message.}
+#' \item{msgstr}{Character. The translated message, or empty strings in the case
+#' of POT files.}
+#' \item{is_obsolete}{Logical. Is the message obsolete?}
+#' \item{translator_comments}{List of character. Comments added by the
+#' translator, typically to explain unclear messages, or why translation choices
+#' were made.}
+#' \item{source_reference_comments}{List of character. Links to where the
+#' message occured in the source, in the form "filename:line".}
+#' \item{flags_comments}{List of character. Typically used to describe
+#' formatting directives. R uses C-style formatting, which would imply a
+#' "c-format" flag.  For example %%d denotes an integer, and %%s denotes a
+#' string. "fuzzy" flags can appear when PO files are merged.}
+#' \item{previous_string_comment}{List of character. When PO files are merged
+#' with an updated POT file ,and a fuzzy flag is generated, the old msgid is
+#' stored in a previous string comment.}
+#' }
+#'
+#' The \code{countable} element of the \code{po} object takes the same form as
+#' the \code{direct} element, with two differences.
+#' \describe{
+#' \item{msgid_plural}{Character. The plural form of the untranslated message.}
+#' \item{msgstr}{This is now a list of character (rather than character.)}
+#' }
+#' @references Much of the logic for this functions was determined from reading
+#' \url{http://pology.nedohodnik.net/doc/user/en_US/ch-poformat.html}
 #' @seealso \code{\link[tools]{xgettext}}
 #' @examples
 #' # TODO
@@ -57,6 +89,7 @@ match_and_extract <- function(x, rx)
 #' @importFrom dplyr filter_
 #' @importFrom dplyr select_
 #' @importFrom dplyr bind_cols
+#' @importFrom dplyr bind_rows
 #' @importFrom magrittr %>%
 #' @importFrom magrittr extract
 #' @importFrom magrittr extract2
@@ -118,11 +151,6 @@ read_po <- function(po_file)
   blank_lines <- cumsum(stri_detect_regex(lines, RX$blank))
   line_groups <- split(lines, blank_lines)
 
-  # Remove empty groups
-  line_groups <- line_groups[
-    bapply(line_groups, is_non_empty)
-  ]
-
   # And remove those empty lines
   line_groups <- line_groups %>%
     lapply(
@@ -130,29 +158,34 @@ read_po <- function(po_file)
         x[!stri_detect_regex(x, RX$blank)]
     )
 
+  # Remove empty groups
+  line_groups <- line_groups[
+    bapply(line_groups, is_non_empty)
+    ]
+
   all_msgs <- line_groups %>%
     lapply(
     function(lines)
     {
-
-      msgid <- match_and_extract(lines, RX$msgid)
+      msgid_match <- match_and_extract(lines, RX$msgid, drop = FALSE)
       # Where there is an obsolete comment, no msgids are possible
       # Currently the implementation allows for zero msgids under all
       # circumstances which is possibly too lenient, but the spec is unclear.
-      if(length(msgid) > 1)
+      if(nrow(msgid_match) != 1L)
       {
         stop(
           "There should be exactly one msgid found in each block. Are you missing a blank line?\nThe offending lines are:\n",
           paste(lines, collapse = "\n")
         )
       }
+      is_obsolete <- !is.na(msgid_match[, 1L])
+      msgid <- msgid_match[, 2L]
 
       comments <- data_frame(
         translator_comments = list(match_and_extract(lines, RX$translator_comment)),
         source_reference_comments = list(match_and_extract(lines, RX$source_reference_comment)),
         flags_comments = list(match_and_extract(lines, RX$flags_comment)),
-        previous_string_comments = list(match_and_extract(lines, RX$previous_string_comment)),
-        obsolete_comments = list(match_and_extract(lines, RX$obsolete_comment))
+        previous_string_comments = list(match_and_extract(lines, RX$previous_string_comment))
       )
       msgid_plural <- match_and_extract(lines, RX$msgid_plural)
       if(is_empty(msgid_plural)) # direct msg
@@ -160,17 +193,16 @@ read_po <- function(po_file)
         msgstr <- match_and_extract(lines, RX$msgstr_direct)
         list(
           msg_type = "direct",
-          msgs = data_frame(msgid  = msgid, msgstr = msgstr) %>%
+          msgs = data_frame(
+            msgid  = msgid,
+            msgstr = msgstr,
+            is_obsolete = is_obsolete
+          ) %>%
             bind_cols(comments)
         )
       } else # countable msg
       {
-        # Can't do
-        # msgstr <- list(match_and_extract(lines, RX$msgstr_countable))
-        # since the logic is a little more complicated
-        msgstr_and_id <- lines %>%
-          stri_match_first_regex(RX$msgstr_countable) %>%
-          extract(!is.na(.[, 2L]), 2:3)
+        msgstr_and_id <- match_and_extract(lines, RX$msgstr_countable)
         # In case of weird file with, e.g, msgstr[1] before msgstr[0], reorder
         o <- order(msgstr_and_id[, 1L])
         msgstr <- msgstr_and_id[o, 2L]
@@ -184,7 +216,8 @@ read_po <- function(po_file)
           msgs = data_frame(
             msgid  = msgid,
             msgid_plural = msgid_plural,
-            msgstr = msgstr
+            msgstr = msgstr,
+            is_obsolete = is_obsolete
           ) %>%
             bind_cols(comments)
         )
@@ -204,19 +237,22 @@ read_po <- function(po_file)
       {
         x$msgs
       }
-    )
+    ) %>%
+    bind_rows()
   msgs_countable <- all_msgs[!is_direct] %>%
     lapply(
       function(x)
       {
         x$msgs
       }
-    )
+    ) %>%
+    bind_rows()
 
   structure(
     list(
       source_type = source_type,
       file_type = file_type,
+      initial_comments = initial_comments,
       metadata = metadata,
       direct = msgs_direct,
       countable = msgs_countable
