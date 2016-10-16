@@ -23,43 +23,85 @@ write_po.po <- function(po, po_file = NULL, ...)
     po,
     {
       c(
+        paste0("# ", initial_comments),
         'msgid ""',
         'msgstr ""',
         paste0('"', metadata$name, ': ', metadata$value, '\\n"'),
         '',
-        as.character(
+        unlist(
           apply(
             direct,
             1,
             function(row)
             {
               c(
-                paste0('msgid "', row[1], '"'),
-                paste0('msgstr "', row[2], '"'),
+                paste0(
+                  rep_len('# ', length(row$translator_comments)),
+                  row$translator_comments
+                ),
+                paste0(
+                  rep_len('#: ', length(row$source_reference_comments)),
+                  row$source_reference_comments
+                ),
+                paste0(
+                  rep_len('#, ', length(row$flags_comments)),
+                  row$flags_comments
+                ),
+                paste0(
+                  rep_len('#| ', length(row$previous_string_comments)),
+                  row$previous_string_comments
+                ),
+                paste0(if(row$is_obsolete) '#~ ', 'msgid "', row$msgid, '"'),
+                paste0(if(row$is_obsolete) '#~ ','msgstr "', row$msgstr, '"'),
                 ''
               )
             }
-          )
+          ),
+          use.names = FALSE
         ),
-        as.character(
+        unlist(
           apply(
             countable,
             1,
             function(row)
             {
-              n_plurals <- length(row[[3]])
+              n_plurals <- length(row$msgstr)
               c(
-                paste0('msgid "', row[[1]], '"'),
-                paste0('msgid_plural "', row[[2]], '"'),
-                paste0("msgstr[", seq(0L, n_plurals - 1L), '] "', row[[3]], '"'),
+                paste0(
+                  rep_len('# ', length(row$translator_comments)),
+                  row$translator_comments
+                ),
+                paste0(
+                  rep_len('#: ', length(row$source_reference_comments)),
+                  row$source_reference_comments
+                ),
+                paste0(
+                  rep_len('#, ', length(row$flags_comments)),
+                  row$flags_comments
+                ),
+                paste0(
+                  rep_len('#| ', length(row$previous_string_comments)),
+                  row$previous_string_comments
+                ),
+                paste0(if(row$is_obsolete) '#~ ', 'msgid "', row$msgid, '"'),
+                paste0(
+                  if(row$is_obsolete) '#~ ', 'msgid_plural "',
+                  row$msgid_plural, '"'
+                ),
+                paste0(
+                  if(row$is_obsolete) '#~ ', "msgstr[",
+                  seq(0L, n_plurals - 1L), '] "', row$msgstr, '"'
+                ),
                 ''
               )
             }
-          )
+          ),
+          use.names = FALSE
         )
       )
     }
   )
+
   if(is.null(po_file)) # auto-generate file name
   {
     # POT files don't have a Language element in the metadata, but PO files do
