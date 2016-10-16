@@ -30,16 +30,22 @@ devtools::install_bitbucket("RL10N/poio")
 
 ## Examples
 
-A typical workflow begins by generating a POT master translation file for a package using `tools::xgettext2pot`.  In this case, we'll use a sample file stored in the **poio** package.
+A typical workflow begins by generating a POT master translation file for a package using `tools::xgettext2pot`.  In this case, we'll use a sample file stored in the **poio** package.  The contents look like this:
 
-```{r, eval = FALSE}
-pot_file <- system.file("extdata/R-poio.pot")
-pot <- read_po(pot_file)
+```{r}
+pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
+readLines(pot_file)
+```
+
+To import the file, use `read_po`.  A description on the object's structure is shown in the "PO Objects" section below.
+
+```{r}
+(pot <- read_po(pot_file))
 ```
 
 `tools::xgettext2pot` makes a mess of some of the metadata element that it generates, so they need fixing.
 
-```{r, eval = FALSE}
+```{r}
 pot_fixed <- fix_metadata(pot)
 ```
 
