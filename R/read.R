@@ -4,6 +4,7 @@ RX <- list(
   msgid_plural             = '^(?:#~)? *msgid_plural *"(.+)"$',
   msgstr_direct            = '^(?:#~)? *msgstr *" *(.*)"$',
   msgstr_countable         = '^(?:#~)? *msgstr(?:\\[([0-9]+)\\])? *"(.*)"$',
+  msgctxt                  = '^(#~)? *msgid *"(.+)"$',
   translator_comment       = "^#(?=[^,:|~]) *(.+)$",
   source_reference_comment = "^#: *(.+)$",
   flags_comment            = "^#, *(.+)$",
@@ -55,6 +56,8 @@ match_and_extract <- function(x, rx, drop = TRUE)
 #' \item{msgstr}{Character. The translated message, or empty strings in the case
 #' of POT files.}
 #' \item{is_obsolete}{Logical. Is the message obsolete?}
+#' \item{msgctxt}{List of character. Disambiguating context information to allow
+#' multiple messages with the same ID.}
 #' \item{translator_comments}{List of character. Comments added by the
 #' translator, typically to explain unclear messages, or why translation choices
 #' were made.}
@@ -187,6 +190,7 @@ read_po <- function(po_file)
         flags_comments = list(match_and_extract(lines, RX$flags_comment)),
         previous_string_comments = list(match_and_extract(lines, RX$previous_string_comment))
       )
+      msgctxt <- list(match_and_extract(lines, RX$msgctxt))
       msgid_plural <- match_and_extract(lines, RX$msgid_plural)
       if(is_empty(msgid_plural)) # direct msg
       {
@@ -196,7 +200,8 @@ read_po <- function(po_file)
           msgs = data_frame(
             msgid  = msgid,
             msgstr = msgstr,
-            is_obsolete = is_obsolete
+            is_obsolete = is_obsolete,
+            msgctxt = msgctxt
           ) %>%
             bind_cols(comments)
         )
@@ -217,7 +222,8 @@ read_po <- function(po_file)
             msgid  = msgid,
             msgid_plural = msgid_plural,
             msgstr = msgstr,
-            is_obsolete = is_obsolete
+            is_obsolete = is_obsolete,
+            msgctxt = msgctxt
           ) %>%
             bind_cols(comments)
         )

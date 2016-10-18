@@ -51,6 +51,11 @@ write_po.po <- function(po, po_file = NULL, ...)
                   rep_len('#| ', length(row$previous_string_comments)),
                   row$previous_string_comments
                 ),
+                paste0(
+                  rep_len('msgctxt "', length(row$msgctxt)),
+                  row$msgctxt,
+                  rep_len('"', length(row$msgctxt))
+                ),
                 paste0(if(row$is_obsolete) '#~ ', 'msgid "', row$msgid, '"'),
                 paste0(if(row$is_obsolete) '#~ ','msgstr "', row$msgstr, '"'),
                 ''

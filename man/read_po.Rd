@@ -42,6 +42,8 @@ message.}
 \item{msgstr}{Character. The translated message, or empty strings in the case
 of POT files.}
 \item{is_obsolete}{Logical. Is the message obsolete?}
+\item{msgctxt}{List of character. Disambiguating context information to allow
+multiple messages with the same ID.}
 \item{translator_comments}{List of character. Comments added by the
 translator, typically to explain unclear messages, or why translation choices
 were made.}

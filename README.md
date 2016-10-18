@@ -127,7 +127,7 @@ To import the file, use `read_po`.  A description on the object's structure is s
 ## [3] "Like the \"fuzzy\" flags comment below."                       
 ## 
 ## $metadata
-## # A tibble: 9 x 2
+## # A tibble: 9 <U+00D7> 2
 ##                        name                       value
 ##                       <chr>                       <chr>
 ## 1        Project-Id-Version                     R 3.3.1
@@ -141,27 +141,27 @@ To import the file, use `read_po`.  A description on the object's structure is s
 ## 9 Content-Transfer-Encoding                        8bit
 ## 
 ## $direct
-## # A tibble: 6 x 7
-##                                      msgid msgstr is_obsolete
-##                                      <chr>  <chr>       <lgl>
-## 1           I got my first real six-string              FALSE
-## 2             Bought it at the %f-and-dime              FALSE
-## 3           Played it till my fingers bled              FALSE
-## 4                It was the summer of '%d.              FALSE
-## 5 Had a \\"band\\"" and we tried real hard              FALSE
-## 6          Jimmy quit and Jody got married               TRUE
+## # A tibble: 6 <U+00D7> 8
+##                                      msgid msgstr is_obsolete   msgctxt
+##                                      <chr>  <chr>       <lgl>    <list>
+## 1           I got my first real six-string              FALSE <chr [2]>
+## 2             Bought it at the %f-and-dime              FALSE <chr [2]>
+## 3           Played it till my fingers bled              FALSE <chr [2]>
+## 4                It was the summer of '%d.              FALSE <chr [2]>
+## 5 Had a \\"band\\"" and we tried real hard              FALSE <chr [2]>
+## 6          Jimmy quit and Jody got married               TRUE <chr [2]>
 ## # ... with 4 more variables: translator_comments <list>,
 ## #   source_reference_comments <list>, flags_comments <list>,
 ## #   previous_string_comments <list>
 ## 
 ## $countable
-## # A tibble: 2 x 8
+## # A tibble: 2 <U+00D7> 9
 ##                                  msgid
 ##                                  <chr>
 ## 1            Me and %d guy from school
 ## 2 I should've known we'd never get far
-## # ... with 7 more variables: msgid_plural <chr>, msgstr <list>,
-## #   is_obsolete <lgl>, translator_comments <list>,
+## # ... with 8 more variables: msgid_plural <chr>, msgstr <list>,
+## #   is_obsolete <lgl>, msgctxt <list>, translator_comments <list>,
 ## #   source_reference_comments <list>, flags_comments <list>,
 ## #   previous_string_comments <list>
 ## 
@@ -185,7 +185,7 @@ pot_fixed <- fix_metadata(pot)
 ```
 
 ```
-## Updating the PO-Revision-Date to '2016-10-16 22:46:21+0300'.
+## Updating the PO-Revision-Date to '2016-10-18 08:06:25+0300'.
 ```
 
 ```
@@ -234,6 +234,7 @@ The `direct` element of the `po` object has the following columns.
 - *msgid*: Character. The untranslated (should be American English) message.
 - *msgstr*: Character. The translated message, or empty strings in the case of POT files.
 - *is_obsolete*: Logical. Is the message obsolete?
+- *msgctxt*: List of character. Disambiguating context information to allow multiple messages with the same ID.
 - *translator_comments*: List of character. Comments added by the translator, typically to explain unclear messages, or why translation choices were made.
 - *source_reference_comments*: List of character. Links to where the message occured in the source, in the form "filename:line".
 - *flags_comments*: List of character. Typically used to describe formatting directives. R uses C-style formatting, which would imply a `"c-format"` flag.  For example `%d` denotes an integer, and `%s` denotes a string. `"fuzzy"` flags can appear when PO files are merged.

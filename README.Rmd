@@ -83,6 +83,7 @@ The `direct` element of the `po` object has the following columns.
 - *msgid*: Character. The untranslated (should be American English) message.
 - *msgstr*: Character. The translated message, or empty strings in the case of POT files.
 - *is_obsolete*: Logical. Is the message obsolete?
+- *msgctxt*: List of character. Disambiguating context information to allow multiple messages with the same ID.
 - *translator_comments*: List of character. Comments added by the translator, typically to explain unclear messages, or why translation choices were made.
 - *source_reference_comments*: List of character. Links to where the message occured in the source, in the form "filename:line".
 - *flags_comments*: List of character. Typically used to describe formatting directives. R uses C-style formatting, which would imply a `"c-format"` flag.  For example `%d` denotes an integer, and `%s` denotes a string. `"fuzzy"` flags can appear when PO files are merged.
