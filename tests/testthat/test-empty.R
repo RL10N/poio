@@ -58,6 +58,7 @@ test_that(
       list(
         source_type = "r",
         file_type   = "pot",
+        initial_comments = character(),
         metadata    = data.frame(
           name = c(
             "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
@@ -71,16 +72,26 @@ test_that(
           ),
           stringsAsFactors = FALSE
         ),
-        direct = data.frame(
-          msgid  = character(),
-          msgstr = character(),
-          stringsAsFactors = FALSE
+        direct = tibble::data_frame(
+          msgid                     = character(),
+          msgstr                    = character(),
+          msgctxt                   = list(),
+          is_obsolete               = logical(),
+          translator_comments       = list(),
+          source_reference_comments = list(),
+          flags_comments            = list(),
+          previous_string_comments  = list()
         ),
-        countable = data.frame(
-          msgid         = character(),
-          msgid_plural  = character(),
-          msgstr        = character(),
-          stringsAsFactors = FALSE
+        countable = tibble::data_frame(
+          msgid                     = character(),
+          msgid_plural              = character(),
+          msgstr                    = list(),
+          msgctxt                   = list(),
+          is_obsolete               = logical(),
+          translator_comments       = list(),
+          source_reference_comments = list(),
+          flags_comments            = list(),
+          previous_string_comments  = list()
         )
       ),
       class = c("po", "list")
@@ -136,7 +147,8 @@ test_that(
       list(
         source_type = "r",
         file_type   = "po",
-        metadata    = data.frame(
+        initial_comments = character(),
+        metadata    = data_frame(
           name = c(
             "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
             "PO-Revision-Date", "Last-Translator", "Language-Team",
@@ -147,26 +159,35 @@ test_that(
             "R 3.3.1", "bugs.r-project.org", "2016-10-05 20:19",
             "YEAR-MO-DA HO:MI+ZONE", "FULL NAME <EMAIL@ADDRESS>", "LANGUAGE <LL@li.org>",
             "1.0", "text/plain; charset=CHARSET", "8bit",
-            "fr_BE", "nplurals=2; plural=(n > 1);"
-          ),
-          stringsAsFactors = FALSE
+            "ar", "nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5);"
+          )
         ),
-        direct = data.frame(
+        direct = tibble::data_frame(
           msgid  = character(),
           msgstr = character(),
-          stringsAsFactors = FALSE
+          is_obsolete = logical(),
+          msgctxt = list(),
+          translator_comments = list(),
+          source_reference_comments = list(),
+          flags_comments = list(),
+          previous_string_comments = list()
         ),
-        countable = data.frame(
+        countable = tibble::data_frame(
           msgid         = character(),
           msgid_plural  = character(),
-          msgstr        = character(),
-          stringsAsFactors = FALSE
+          msgstr        = list(),
+          is_obsolete = logical(),
+          msgctxt = list(),
+          translator_comments = list(),
+          source_reference_comments = list(),
+          flags_comments = list(),
+          previous_string_comments = list()
         )
       ),
       class = c("po", "list")
     )
     pot <- read_po(pot_file)
-    actual <- generate_po_from_pot(pot, "fr_BE")
+    actual <- generate_po_from_pot(pot, "ar")
     expect_identical(actual, expected)
   }
 )
