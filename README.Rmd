@@ -28,6 +28,14 @@ devtools::install_bitbucket("RL10N/poio")
 
 `write_po` writes `po` objects back to a PO file.
 
+`get_n_plural_forms` is a convenience function for retriving the number of plural forms for a language from the `po` object's metadata.
+
+## Datasets
+
+`language_codes` is a list of all the language codes and the country codes that `gettext` understands.
+
+`plural_forms` is a data.frame of the plural forms header string for over 140 common languages. 
+
 ## Examples
 
 A typical workflow begins by generating a POT master translation file for a package using `tools::xgettext2pot`.  In this case, we'll use a sample file stored in the **poio** package.  The contents look like this:
