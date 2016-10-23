@@ -45,8 +45,9 @@ get_n_plural_forms.data.frame <- function(x, default = 2L, ...)
     plural_forms <- plural_forms[1]
   }
   n_plural_forms <- plural_forms %>%
-      stri_match_first_regex("nplurals *= *([0-9])")[, 2] %>%
-      as.integer
+    stri_match_first_regex("nplurals *= *([0-9])") %>%
+    extract(, 2) %>%
+    as.integer
   if(is.na(n_plural_forms))
   {
     warning("The plural-forms metadata field is badly formed.")
