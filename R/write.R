@@ -24,7 +24,7 @@ write_po.po <- function(po, po_file = NULL, ...)
     po,
     {
       c(
-        paste0("# ", initial_comments),
+        initial_comments_to_lines(initial_comments),
         'msgid ""',
         'msgstr ""',
         metadata_to_lines(metadata),
@@ -49,6 +49,14 @@ write_po.po <- function(po, po_file = NULL, ...)
     stri_write_lines(lines, po_file)
   }
   invisible(po)
+}
+
+initial_comments_to_lines <- function(initial_comments)
+{
+  paste0(
+    rep_len("# ", length(initial_comments)),
+    initial_comments
+  )
 }
 
 metadata_to_lines <- function(metadata)
