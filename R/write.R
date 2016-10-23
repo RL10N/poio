@@ -19,6 +19,7 @@ write_po <- function(po, po_file = NULL, ...)
 #' @export
 write_po.po <- function(po, po_file = NULL, ...)
 {
+  n_plurals <- get_n_plural_forms(po)
   lines <- with(
     po,
     {
@@ -26,104 +27,17 @@ write_po.po <- function(po, po_file = NULL, ...)
         paste0("# ", initial_comments),
         'msgid ""',
         'msgstr ""',
-        paste0('"', metadata$name, ': ', metadata$value, '\\n"'),
+        metadata_to_lines(metadata),
         '',
-        unlist(
-          apply(
-            direct,
-            1,
-            function(row)
-            {
-              c(
-                paste0(
-                  rep_len('# ', length(row$translator_comments)),
-                  row$translator_comments
-                ),
-                paste0(
-                  rep_len('#: ', length(row$source_reference_comments)),
-                  row$source_reference_comments
-                ),
-                paste0(
-                  rep_len('#, ', length(row$flags_comments)),
-                  row$flags_comments
-                ),
-                paste0(
-                  rep_len('#| ', length(row$previous_string_comments)),
-                  row$previous_string_comments
-                ),
-                paste0(
-                  rep_len('msgctxt "', length(row$msgctxt)),
-                  row$msgctxt,
-                  rep_len('"', length(row$msgctxt))
-                ),
-                paste0(if(row$is_obsolete) '#~ ', 'msgid "', row$msgid, '"'),
-                paste0(if(row$is_obsolete) '#~ ','msgstr "', row$msgstr, '"'),
-                ''
-              )
-            }
-          ),
-          use.names = FALSE
-        ),
-        unlist(
-          apply(
-            countable,
-            1,
-            function(row)
-            {
-              n_plurals <- length(row$msgstr)
-              c(
-                paste0(
-                  rep_len('# ', length(row$translator_comments)),
-                  row$translator_comments
-                ),
-                paste0(
-                  rep_len('#: ', length(row$source_reference_comments)),
-                  row$source_reference_comments
-                ),
-                paste0(
-                  rep_len('#, ', length(row$flags_comments)),
-                  row$flags_comments
-                ),
-                paste0(
-                  rep_len('#| ', length(row$previous_string_comments)),
-                  row$previous_string_comments
-                ),
-                paste0(if(row$is_obsolete) '#~ ', 'msgid "', row$msgid, '"'),
-                paste0(
-                  if(row$is_obsolete) '#~ ', 'msgid_plural "',
-                  row$msgid_plural, '"'
-                ),
-                paste0(
-                  if(row$is_obsolete) '#~ ', "msgstr[",
-                  seq(0L, n_plurals - 1L), '] "', row$msgstr, '"'
-                ),
-                ''
-              )
-            }
-          ),
-          use.names = FALSE
-        )
+        direct_msgs_to_lines(direct),
+        countable_msgs_to_lines(countable, n_plurals)
       )
     }
   )
 
   if(is.null(po_file)) # auto-generate file name
   {
-    # POT files don't have a Language element in the metadata, but PO files do
-    lang <- po$metadata["Language"]
-    if(po$file_type == "pot")
-    {
-      # Use pkg name instead of language
-      lang <- stri_extract_first_regex(
-        po$metadata["Project-Id-Version"],
-        "^[a-zA-Z0-9._]+"
-      )
-      file_ext <- ".pot"
-    } else
-    {
-      file_ext <- ".po"
-    }
-    po_file <- file.path("po", paste0(if(po$type == "r") "R-", lang, file_ext))
+    po_file <- generate_po_file_name(po)
     message("Writing to ", po_file)
   }
   # stri_write_lines is faster, but doesn't support writing to text connections
@@ -135,4 +49,133 @@ write_po.po <- function(po, po_file = NULL, ...)
     stri_write_lines(lines, po_file)
   }
   invisible(po)
+}
+
+metadata_to_lines <- function(metadata)
+{
+  if(nrow(metadata) == 0L)
+  {
+    return(character())
+  }
+  with(metadata, paste0('"', name, ': ', value, '\\n"'))
+}
+
+#' @importFrom dplyr rowwise
+#' @importFrom dplyr transmute_
+#' @importFrom magrittr %>%
+direct_msgs_to_lines <- function(direct)
+{
+  if(nrow(direct) == 0L)
+  {
+    return(character())
+  }
+  direct %>%
+    rowwise() %>%
+    transmute_(
+      output = ~ list(
+        c(
+          paste0(
+            rep_len('# ', length(translator_comments)),
+            translator_comments
+          ),
+          paste0(
+            rep_len('#: ', length(source_reference_comments)),
+            source_reference_comments
+          ),
+          paste0(
+            rep_len('#, ', length(flags_comments)),
+            flags_comments
+          ),
+          paste0(
+            rep_len('#| ', length(previous_string_comments)),
+            previous_string_comments
+          ),
+          paste0(
+            rep_len('msgctxt "', length(msgctxt)),
+            msgctxt,
+            rep_len('"', length(msgctxt))
+          ),
+          paste0(if(is_obsolete) '#~ ', 'msgid "', msgid, '"'),
+          paste0(if(is_obsolete) '#~ ', 'msgstr "', msgstr, '"'),
+          ''
+        )
+      )
+    ) %>%
+    unlist(use.names = FALSE)
+}
+
+#' @importFrom dplyr rowwise
+#' @importFrom dplyr transmute_
+#' @importFrom magrittr %>%
+countable_msgs_to_lines <- function(countable, n_plurals)
+{
+  if(nrow(countable) == 0L)
+  {
+    return(character())
+  }
+  countable %>%
+    rowwise() %>%
+    transmute_(
+      output = ~ list(
+        c(
+          paste0(
+            rep_len('# ', length(translator_comments)),
+            translator_comments
+          ),
+          paste0(
+            rep_len('#: ', length(source_reference_comments)),
+            source_reference_comments
+          ),
+          paste0(
+            rep_len('#, ', length(flags_comments)),
+            flags_comments
+          ),
+          paste0(
+            rep_len('#| ', length(previous_string_comments)),
+            previous_string_comments
+          ),
+          paste0(
+            rep_len('msgctxt "', length(msgctxt)),
+            msgctxt,
+            rep_len('"', length(msgctxt))
+          ),
+          paste0(if(is_obsolete) '#~ ', 'msgid "', msgid, '"'),
+          paste0(
+            if(is_obsolete) '#~ ', 'msgid_plural "',
+            msgid_plural, '"'
+          ),
+          paste0(
+            if(is_obsolete) '#~ ', "msgstr[",
+            seq(0L, n_plurals - 1L), '] "', msgstr, '"'
+          ),
+          ''
+        )
+      )
+    ) %>%
+    unlist(use.names = FALSE)
+}
+
+#' @importFrom dplyr filter_
+#' @importFrom magrittr %>%
+#' @importFrom magrittr extract2
+#' @importFrom stringi stri_extract_first_regex
+generate_po_file_name <- function(po)
+{
+  # POT files don't have a Language element in the metadata, but PO files do
+  if(po$file_type == "pot")
+  {
+    # Use pkg name instead of language
+    lang <- po$metadata %>%
+      filter_(~ name == "Project-Id-Version") %>%
+      extract2("value") %>%
+      stri_extract_first_regex("^[a-zA-Z0-9._]+")
+    file_ext <- ".pot"
+  } else
+  {
+    lang <- po$metadata %>%
+      filter_(~ name == "Language") %>%
+      extract2("value")
+    file_ext <- ".po"
+  }
+  file.path("po", paste0(if(po$source_type == "r") "R-", lang, file_ext))
 }
