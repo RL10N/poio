@@ -1,14 +1,25 @@
 RX <- list(
+  # "capture(some letters or hyphens): capture(some stuff)\n"
   metadata                 = '^"([a-zA-Z-]+): *(.+)\\\\n"$',
+  # optional(obsolete comment) msgid "capture(some stuff)"
   msgid                    = '^(#~)? *msgid *"(.+)"$',
+  # optional(obsolete comment) msgid_plural "capture(some stuff)"
   msgid_plural             = '^(?:#~)? *msgid_plural *"(.+)"$',
+  # optional(obsolete comment) msgstr "capture(some stuff)"
   msgstr_direct            = '^(?:#~)? *msgstr *" *(.*)"$',
+  # optional(obsolete comment) msgstr[index] "capture(some stuff)"
   msgstr_countable         = '^(?:#~)? *msgstr(?:\\[([0-9]+)\\])? *"(.*)"$',
-  msgctxt                  = '^(#~)? *msgid *"(.+)"$',
+  # optional(obsolete comment) msgctxt "capture(some stuff)"
+  msgctxt                  = '^(#~)? *msgctxt *"(.+)"$',
+  # hash, not (caret or comma or colon or pipe or tilde) capture(some stuff)
   translator_comment       = "^#(?=[^,:|~]) *(.+)$",
+  # hash, colon capture(some stuff)
   source_reference_comment = "^#: *(.+)$",
+  # hash, comma capture(some stuff)
   flags_comment            = "^#, *(.+)$",
+  # hash, pipe capture(some stuff)
   previous_string_comment  = "^#\\| *(.+)$",
+  # maybe some spaces
   blank                    = "^ *$"
 )
 
@@ -132,19 +143,7 @@ read_po <- function(po_file)
   )
 
   # How many plural forms are there?
-  plural_forms <- metadata %>%
-    filter_(~ name == "Plural-Forms") %>%
-    select_(~ value) %>%
-    extract2(1)
-  n_plural_forms <- if(is_scalar(plural_forms))
-  {
-    plural_forms %>%
-      stri_match_first_regex("nplurals *= *([0-9])")[, 2] %>%
-      as.integer
-  } else
-  {
-    2L # for POT files
-  }
+  n_plural_forms <- get_n_plural_forms(metadata)
 
   # Now consider only lines after metadata
   last_metadata_line <- metadata_line_index[length(metadata_line_index)]
@@ -166,93 +165,129 @@ read_po <- function(po_file)
     bapply(line_groups, is_non_empty)
     ]
 
-  all_msgs <- line_groups %>%
-    lapply(
-    function(lines)
-    {
-      msgid_match <- match_and_extract(lines, RX$msgid, drop = FALSE)
-      # Where there is an obsolete comment, no msgids are possible
-      # Currently the implementation allows for zero msgids under all
-      # circumstances which is possibly too lenient, but the spec is unclear.
-      if(nrow(msgid_match) != 1L)
+  # Special handling of empty case need because lapply
+  # just returns list() otherwise.
+  if(is_empty(line_groups))
+  {
+    msgs_direct <- data_frame(
+      msgid  = character(),
+      msgstr = character(),
+      is_obsolete = logical(),
+      msgctxt = list(),
+      translator_comments = list(),
+      source_reference_comments = list(),
+      flags_comments = list(),
+      previous_string_comments = list()
+    )
+    msgs_countable <- data_frame(
+      msgid         = character(),
+      msgid_plural  = character(),
+      msgstr        = list(),
+      is_obsolete = logical(),
+      msgctxt = list(),
+      translator_comments = list(),
+      source_reference_comments = list(),
+      flags_comments = list(),
+      previous_string_comments = list()
+    )
+  } else # lines groups is not empty
+  {
+    all_msgs <- line_groups %>%
+      lapply(
+      function(lines)
       {
-        stop(
-          "There should be exactly one msgid found in each block. Are you missing a blank line?\nThe offending lines are:\n",
-          paste(lines, collapse = "\n")
-        )
-      }
-      is_obsolete <- !is.na(msgid_match[, 1L])
-      msgid <- msgid_match[, 2L]
+        msgid_match <- match_and_extract(lines, RX$msgid, drop = FALSE)
+        # Where there is an obsolete comment, no msgids are possible
+        # Currently the implementation allows for zero msgids under all
+        # circumstances which is possibly too lenient, but the spec is unclear.
+        if(nrow(msgid_match) != 1L)
+        {
+          stop(
+            "There should be exactly one msgid found in each block. Are you missing a blank line?\nThe offending lines are:\n",
+            paste(lines, collapse = "\n")
+          )
+        }
+        is_obsolete <- !is.na(msgid_match[, 1L])
+        msgid <- msgid_match[, 2L]
 
-      comments <- data_frame(
-        translator_comments = list(match_and_extract(lines, RX$translator_comment)),
-        source_reference_comments = list(match_and_extract(lines, RX$source_reference_comment)),
-        flags_comments = list(match_and_extract(lines, RX$flags_comment)),
-        previous_string_comments = list(match_and_extract(lines, RX$previous_string_comment))
-      )
-      msgctxt <- list(match_and_extract(lines, RX$msgctxt))
-      msgid_plural <- match_and_extract(lines, RX$msgid_plural)
-      if(is_empty(msgid_plural)) # direct msg
-      {
-        msgstr <- match_and_extract(lines, RX$msgstr_direct)
-        list(
-          msg_type = "direct",
-          msgs = data_frame(
-            msgid  = msgid,
-            msgstr = msgstr,
-            is_obsolete = is_obsolete,
-            msgctxt = msgctxt
-          ) %>%
-            bind_cols(comments)
+        comments <- data_frame(
+          translator_comments = list(
+            match_and_extract(lines, RX$translator_comment)
+          ),
+          source_reference_comments = list(
+            match_and_extract(lines, RX$source_reference_comment)
+          ),
+          flags_comments = list(
+            match_and_extract(lines, RX$flags_comment)
+          ),
+          previous_string_comments = list(
+            match_and_extract(lines, RX$previous_string_comment)
+          )
         )
-      } else # countable msg
-      {
-        msgstr_and_id <- match_and_extract(lines, RX$msgstr_countable)
-        # In case of weird file with, e.g, msgstr[1] before msgstr[0], reorder
-        o <- order(msgstr_and_id[, 1L])
-        msgstr <- msgstr_and_id[o, 2L]
-        # If badly formed with wrong number of plurals, add empty translations
-        # up to no. of plural forms suggested by metadata (or ignore extras).
-        length(msgstr) <- n_plural_forms
-        msgstr <- list(msgstr)
+        msgctxt <- list(match_and_extract(lines, RX$msgctxt))
+        msgid_plural <- match_and_extract(lines, RX$msgid_plural)
+        if(is_empty(msgid_plural)) # direct msg
+        {
+          msgstr <- match_and_extract(lines, RX$msgstr_direct)
+          list(
+            msg_type = "direct",
+            msgs = data_frame(
+              msgid       = msgid,
+              msgstr      = msgstr,
+              is_obsolete = is_obsolete,
+              msgctxt     = msgctxt
+            ) %>%
+              bind_cols(comments)
+          )
+        } else # countable msg
+        {
+          msgstr_and_id <- match_and_extract(lines, RX$msgstr_countable)
+          # In case of weird file with, e.g, msgstr[1] before msgstr[0], reorder
+          o <- order(msgstr_and_id[, 1L])
+          msgstr <- msgstr_and_id[o, 2L]
+          # If badly formed with wrong number of plurals, add empty translations
+          # up to no. of plural forms suggested by metadata (or ignore extras).
+          length(msgstr) <- n_plural_forms
+          msgstr <- list(msgstr)
 
-        list(
-          msg_type = "countable",
-          msgs = data_frame(
-            msgid  = msgid,
-            msgid_plural = msgid_plural,
-            msgstr = msgstr,
-            is_obsolete = is_obsolete,
-            msgctxt = msgctxt
-          ) %>%
-            bind_cols(comments)
-        )
-      }
-    }
-  )
-  is_direct <- all_msgs %>%
-    bapply(
-      function(x)
-      {
-        x$msg_type == "direct"
+          list(
+            msg_type = "countable",
+            msgs = data_frame(
+              msgid        = msgid,
+              msgid_plural = msgid_plural,
+              msgstr       = msgstr,
+              is_obsolete  = is_obsolete,
+              msgctxt      = msgctxt
+            ) %>%
+              bind_cols(comments)
+          )
+        }
       }
     )
-  msgs_direct <- all_msgs[is_direct] %>%
-    lapply(
-      function(x)
-      {
-        x$msgs
-      }
-    ) %>%
-    bind_rows()
-  msgs_countable <- all_msgs[!is_direct] %>%
-    lapply(
-      function(x)
-      {
-        x$msgs
-      }
-    ) %>%
-    bind_rows()
+    is_direct <- all_msgs %>%
+      bapply(
+        function(x)
+        {
+          x$msg_type == "direct"
+        }
+      )
+    msgs_direct <- all_msgs[is_direct] %>%
+      lapply(
+        function(x)
+        {
+          x$msgs
+        }
+      ) %>%
+      bind_rows()
+    msgs_countable <- all_msgs[!is_direct] %>%
+      lapply(
+        function(x)
+        {
+          x$msgs
+        }
+      ) %>%
+      bind_rows()
+  }
 
   structure(
     list(
