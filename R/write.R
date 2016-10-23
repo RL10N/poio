@@ -5,9 +5,13 @@
 #' @param po_file A path to the po_file to be written, or NULL to automatically
 #' generate the path.
 #' @param ... Passed between methods. Not currently used.
-#' @return The funcion is mostly invoked for the side-effect of writing a PO
+#' @return The function is mostly invoked for the side-effect of writing a PO
 #' file.  The \code{po} argument is also invisibly returned, for convenience
 #' when this function is used in a pipe chain.
+#' @examples
+#' pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
+#' pot <- read_po(pot_file)
+#' write_po(pot, stdout())
 #' @export
 write_po <- function(po, po_file = NULL, ...)
 {

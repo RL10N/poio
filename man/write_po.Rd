@@ -15,11 +15,16 @@ generate the path.}
 \item{...}{Passed between methods. Not currently used.}
 }
 \value{
-The funcion is mostly invoked for the side-effect of writing a PO
+The function is mostly invoked for the side-effect of writing a PO
 file.  The \code{po} argument is also invisibly returned, for convenience
 when this function is used in a pipe chain.
 }
 \description{
 Writes and object of class \code{po} to a .po file.
+}
+\examples{
+pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
+pot <- read_po(pot_file)
+write_po(pot, stdout())
 }
 

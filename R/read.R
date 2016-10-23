@@ -93,7 +93,9 @@ match_and_extract <- function(x, rx, drop = TRUE)
 #' \url{http://pology.nedohodnik.net/doc/user/en_US/ch-poformat.html}
 #' @seealso \code{\link[tools]{xgettext}}
 #' @examples
-#' # TODO
+#' # read_po is ised for both po and pot files
+#' pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
+#' (pot <- read_po(pot_file))
 #' @importFrom assertive.base bapply
 #' @importFrom assertive.properties is_empty
 #' @importFrom assertive.properties is_non_empty

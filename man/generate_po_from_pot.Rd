@@ -34,4 +34,23 @@ If the plural form is unknown for the specified language, the plural
 form is set to \code{NA}.  See \code{\link{plural_forms}} for supported
 languages.
 }
+\examples{
+pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
+pot <- read_po(pot_file)
+# It's a good idea to fix the metadata before you generate the PO files
+pot_fixed <- fix_metadata(pot)
+
+# Call generate_po_from_pot for each language that you want to translate to
+po <- lapply(
+  c(German = "de", Qatari_Arabic = "ar_QA"),
+  generate_po_from_pot,
+  x = pot_fixed
+)
+
+# Notice the Language and Plural-forms elements in the metadata
+po$German$metadata
+# Also notice that the countable msgstr elements for Arabic now
+# have length 6, since Arabic has 6 plural forms
+po$Qatari_Arabic$countable$msgstr
+}
 

@@ -69,7 +69,9 @@ the \code{direct} element, with two differences.
 Reads .PO and .POT translation files.
 }
 \examples{
-# TODO
+# read_po is ised for both po and pot files
+pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
+(pot <- read_po(pot_file))
 }
 \references{
 Much of the logic for this functions was determined from reading

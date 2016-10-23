@@ -34,6 +34,14 @@
 #' \item{Language}{An ISO 639-1 two-letter language code.  See \url{http://www.loc.gov/standards/iso639-2/php/code_list.php}}
 #' \item{Plural-Forms}{The plural-form specification for the Language code.}
 #' }
+#' @examples
+#' pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
+#' pot <- read_po(pot_file)
+#' pot_fixed <- fix_metadata(pot)
+#'
+#' # Compare the metadata before and after
+#' pot$metadata
+#' pot_fixed$metadata
 #' @export
 fix_metadata <- function(x, pkg = ".", ...)
 {
