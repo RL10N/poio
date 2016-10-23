@@ -38,6 +38,7 @@ msgstr ""
 
 # Also uses xgettextf
 #, c-format
+msgctxt "Summer as in seasons, not a function that calculates sums"
 msgid "It was the summer of '%d."
 msgstr ""
 
