@@ -58,7 +58,6 @@ fix_metadata.data.frame <- function(x, pkg = ".", file_type, ...)
   {
     pkg <- as.package(pkg)
   }
-  x <- coerce_to(x, "data.frame")
   x <- x %>%
     fix_metadata_columns() %>%
     fix_metadata_rows(file_type = file_type) %>%
@@ -70,7 +69,19 @@ fix_metadata.data.frame <- function(x, pkg = ".", file_type, ...)
     fix_content_transfer_encoding()
   if(file_type == "po")
   {
-    lang <- x$value[x$name == "Language"]
+    lang <- x %>%
+      filter_(name == "Language") %>%
+      select_(~ value) %>%
+      extract2(1)
+    if(is_empty(lang))
+    {
+      warning("No Language metadata field found. Adding an empty field; please manually set the value.")
+      x <- x %>%
+        bind_rows(
+          data_frame(name = "Language", value = NA_character_)
+        )
+      return(x)
+    }
     # Can't fix the Language field, but we can check its validity
     check_language(lang)
     x <- x %>%
@@ -81,6 +92,7 @@ fix_metadata.data.frame <- function(x, pkg = ".", file_type, ...)
 
 fix_metadata_columns <- function(x)
 {
+  # Add missing columns
   required_columns <- c("name", "value")
   n <- nrow(x)
   for(column in required_columns)
@@ -124,6 +136,13 @@ fix_metadata_rows <- function(x, file_type = c("po", "pot"))
         data.frame(name = row, value = character(1), stringsAsFactors = FALSE)
       )
     }
+  }
+  # Remove duplicate fields
+  if(anyDuplicated(x$name))
+  {
+    message("Removing duplicate fields.")
+    x <- x %>%
+      distinct_("name")
   }
   x
 }
@@ -207,7 +226,10 @@ fix_field <- function(x, po_field, expected, pkg, desc_fields = character())
     }
   }
   # Update field, if necessary
-  actual <- x[x$name == po_field, "value"]
+  actual <- x %>%
+    filter_(~ name == po_field) %>%
+    select_(~ value) %>%
+    extract2(1)
   if(actual != expected)
   {
     msg <- gettextf(
