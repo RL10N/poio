@@ -19,6 +19,9 @@ generate_po_from_pot <- function(x, lang, ...)
   UseMethod("generate_po_from_pot")
 }
 
+#' @importFrom dplyr bind_rows
+#' @importFrom magrittr %>%
+#' @importFrom tibble data_frame
 #' @rdname generate_po_from_pot
 #' @export
 generate_po_from_pot.po <- function(x, lang, ...)
@@ -28,28 +31,22 @@ generate_po_from_pot.po <- function(x, lang, ...)
   plural_forms <- lookup_plural_forms_for_language(lang)
   if("Language" %in% x$metadata$name)
   {
-    # Hmm. Should maybe write this using dplyr at some point.
+    # Don't bother with dplyr here. The code isn't clearer.
+    # x$metadata <- x$metadata %>%
+    #   mutate(value = ~ ifelse(name == "Language", lang, value))
     x$metadata$value[x$metadata$name == "Language"] <- lang
   } else
   {
-    x$metadata <- rbind(
-      x$metadata,
-      data.frame(name = "Language", value = lang, stringsAsFactors = FALSE)
-    )
+    x$metadata <- x$metadata %>%
+      bind_rows(data_frame(name = "Language", value = lang))
   }
   if("Plural-Forms" %in% x$metadata$name)
   {
     x$metadata$value[x$metadata$name == "Plural-Forms"] <- plural_forms
   } else
   {
-    x$metadata <- rbind(
-      x$metadata,
-      data.frame(
-        name = "Plural-Forms",
-        value = plural_forms,
-        stringsAsFactors = FALSE
-      )
-    )
+    x$metadata <- x$metadata %>%
+      bind_rows(data_frame(name = "Plural-Forms", value = plural_forms))
   }
   x
 }
