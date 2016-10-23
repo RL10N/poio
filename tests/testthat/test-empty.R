@@ -8,7 +8,8 @@ test_that(
       list(
         source_type = "r",
         file_type   = "pot",
-        metadata    = data.frame(
+        initial_comments = character(),
+        metadata    = tibble::data_frame(
           name = c(
             "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
             "PO-Revision-Date", "Last-Translator", "Language-Team",
@@ -18,19 +19,28 @@ test_that(
             "R 3.3.1", "bugs.r-project.org", "2016-10-05 20:19",
             "YEAR-MO-DA HO:MI+ZONE", "FULL NAME <EMAIL@ADDRESS>", "LANGUAGE <LL@li.org>",
             "1.0", "text/plain; charset=CHARSET", "8bit"
-          ),
-          stringsAsFactors = FALSE
+          )
         ),
-        direct = data.frame(
+        direct = tibble::data_frame(
           msgid  = character(),
           msgstr = character(),
-          stringsAsFactors = FALSE
+          is_obsolete = logical(),
+          msgctxt = list(),
+          translator_comments = list(),
+          source_reference_comments = list(),
+          flags_comments = list(),
+          previous_string_comments = list()
         ),
-        countable = data.frame(
+        countable = tibble::data_frame(
           msgid         = character(),
           msgid_plural  = character(),
-          msgstr        = character(),
-          stringsAsFactors = FALSE
+          msgstr        = list(),
+          is_obsolete = logical(),
+          msgctxt = list(),
+          translator_comments = list(),
+          source_reference_comments = list(),
+          flags_comments = list(),
+          previous_string_comments = list()
         )
       ),
       class = c("po", "list")
