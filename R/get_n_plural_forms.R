@@ -5,13 +5,14 @@
 #' @param x A \code{po} object or its metadata element.
 #' @param default An integer to return if the number of plural forms cannot be
 #'   determined.
+#' @param ... Arguments passed between methods.
 #' @return An integer of the number of plural forms for the language defined in
 #'   the PO file.
 #' @note POT files are not language-specific and don't have a "Plural-Forms"
 #'   metadata element. By convention, they are considered to have 2 plural
 #'   forms, since that is how many pulral forms there are in English.
 #' @export
-get_n_plural_forms <- function(x, ...)
+get_n_plural_forms <- function(x, default = 2L, ...)
 {
   UseMethod("get_n_plural_forms")
 }

@@ -22,25 +22,25 @@ test_that(
           )
         ),
         direct = tibble::data_frame(
-          msgid  = character(),
-          msgstr = character(),
-          is_obsolete = logical(),
-          msgctxt = list(),
-          translator_comments = list(),
+          msgid                     = character(),
+          msgstr                    = character(),
+          is_obsolete               = logical(),
+          msgctxt                   = list(),
+          translator_comments       = list(),
           source_reference_comments = list(),
-          flags_comments = list(),
-          previous_string_comments = list()
+          flags_comments            = list(),
+          previous_string_comments  = list()
         ),
         countable = tibble::data_frame(
-          msgid         = character(),
-          msgid_plural  = character(),
-          msgstr        = list(),
-          is_obsolete = logical(),
-          msgctxt = list(),
-          translator_comments = list(),
+          msgid                     = character(),
+          msgid_plural              = character(),
+          msgstr                    = list(),
+          is_obsolete               = logical(),
+          msgctxt                   = list(),
+          translator_comments       = list(),
           source_reference_comments = list(),
-          flags_comments = list(),
-          previous_string_comments = list()
+          flags_comments            = list(),
+          previous_string_comments  = list()
         )
       ),
       class = c("po", "list")
@@ -59,7 +59,7 @@ test_that(
         source_type = "r",
         file_type   = "pot",
         initial_comments = character(),
-        metadata    = data.frame(
+        metadata    = tibble::data_frame(
           name = c(
             "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
             "PO-Revision-Date", "Last-Translator", "Language-Team",
@@ -69,14 +69,13 @@ test_that(
             "poio 0.0-1", "https://github.com/RL10N/poio/issues", "2016-10-05 20:19",
             "DUMMY VALUE", "FULL NAME <EMAIL@ADDRESS>", "LANGUAGE <LL@li.org>",
             "1.0", "text/plain; charset=UTF-8", "8bit"
-          ),
-          stringsAsFactors = FALSE
+          )
         ),
         direct = tibble::data_frame(
           msgid                     = character(),
           msgstr                    = character(),
-          msgctxt                   = list(),
           is_obsolete               = logical(),
+          msgctxt                   = list(),
           translator_comments       = list(),
           source_reference_comments = list(),
           flags_comments            = list(),
@@ -86,8 +85,8 @@ test_that(
           msgid                     = character(),
           msgid_plural              = character(),
           msgstr                    = list(),
-          msgctxt                   = list(),
           is_obsolete               = logical(),
+          msgctxt                   = list(),
           translator_comments       = list(),
           source_reference_comments = list(),
           flags_comments            = list(),
@@ -107,6 +106,13 @@ test_that(
       actual$metadata,
       value[name == "PO-Revision-Date"] <- "DUMMY VALUE"
     )
+
+    # Bug in tibble means comparing data_frames with empty list elts not possible
+    # Convert to data.frame until this is fixed
+    actual$direct <- as.data.frame(actual$direct)
+    expected$direct <- as.data.frame(expected$direct)
+    actual$countable <- as.data.frame(actual$countable)
+    expected$countable <- as.data.frame(expected$countable)
     expect_identical(actual, expected)
 
     date_format <- "%Y-%m-%d %H:%M:%S%z"
@@ -148,7 +154,7 @@ test_that(
         source_type = "r",
         file_type   = "po",
         initial_comments = character(),
-        metadata    = data_frame(
+        metadata    = tibble::data_frame(
           name = c(
             "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
             "PO-Revision-Date", "Last-Translator", "Language-Team",

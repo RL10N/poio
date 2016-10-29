@@ -4,13 +4,15 @@
 \alias{get_n_plural_forms}
 \title{Get the number of plural forms from a PO file}
 \usage{
-get_n_plural_forms(x, ...)
+get_n_plural_forms(x, default = 2L, ...)
 }
 \arguments{
 \item{x}{A \code{po} object or its metadata element.}
 
 \item{default}{An integer to return if the number of plural forms cannot be
 determined.}
+
+\item{...}{Arguments passed between methods.}
 }
 \value{
 An integer of the number of plural forms for the language defined in

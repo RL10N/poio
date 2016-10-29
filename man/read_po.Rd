@@ -8,9 +8,6 @@ read_po(po_file)
 }
 \arguments{
 \item{po_file}{A string giving a path to a PO file.}
-
-\item{pot_file}{A string giving a path to a POT file, or \code{NULL} to
-autogenerate it.}
 }
 \value{
 An object of class \code{po}, which is a list with the following

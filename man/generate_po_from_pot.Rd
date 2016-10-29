@@ -38,7 +38,7 @@ languages.
 pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
 pot <- read_po(pot_file)
 # It's a good idea to fix the metadata before you generate the PO files
-pot_fixed <- fix_metadata(pot)
+pot_fixed <- fix_metadata(pot, system.file(package = "poio"))
 
 # Call generate_po_from_pot for each language that you want to translate to
 po <- lapply(

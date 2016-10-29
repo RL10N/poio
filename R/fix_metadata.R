@@ -37,7 +37,7 @@
 #' @examples
 #' pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
 #' pot <- read_po(pot_file)
-#' pot_fixed <- fix_metadata(pot)
+#' pot_fixed <- fix_metadata(pot, system.file(package = "poio"))
 #'
 #' # Compare the metadata before and after
 #' pot$metadata
@@ -78,7 +78,7 @@ fix_metadata.data.frame <- function(x, pkg = ".", file_type, ...)
   if(file_type == "po")
   {
     lang <- x %>%
-      filter_(name == "Language") %>%
+      filter_(~ name == "Language") %>%
       select_(~ value) %>%
       extract2(1)
     if(is_empty(lang))
@@ -118,6 +118,7 @@ fix_metadata_columns <- function(x)
   x
 }
 
+#' @importFrom dplyr distinct_
 fix_metadata_rows <- function(x, file_type = c("po", "pot"))
 {
   file_type <- match.arg(file_type)

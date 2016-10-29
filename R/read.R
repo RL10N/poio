@@ -10,7 +10,7 @@ RX <- list(
   # optional(obsolete comment) msgstr[index] "capture(some stuff)"
   msgstr_countable         = '^(?:#~)? *msgstr(?:\\[([0-9]+)\\])? *"(.*)"$',
   # optional(obsolete comment) msgctxt "capture(some stuff)"
-  msgctxt                  = '^(#~)? *msgctxt *"(.+)"$',
+  msgctxt                  = '^(?:#~)? *msgctxt *"(.+)"$',
   # hash, not (caret or comma or colon or pipe or tilde) capture(some stuff)
   translator_comment       = "^#(?=[^,:|~]) *(.+)$",
   # hash, colon capture(some stuff)
@@ -22,6 +22,9 @@ RX <- list(
   # maybe some spaces
   blank                    = "^ *$"
 )
+
+# avoid warning in R RMCD check
+utils::globalVariables(".")
 
 #' @importFrom magrittr extract
 #' @importFrom stringi stri_match_first_regex
@@ -36,8 +39,6 @@ match_and_extract <- function(x, rx, drop = TRUE)
 #'
 #' Reads .PO and .POT translation files.
 #' @param po_file A string giving a path to a PO file.
-#' @param pot_file A string giving a path to a POT file, or \code{NULL} to
-#' autogenerate it.
 #' @return An object of class \code{po}, which is a list with the following
 #' components:
 #' \describe{
