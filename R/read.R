@@ -110,11 +110,11 @@ match_and_extract <- function(x, rx, drop = TRUE)
 #' @importFrom magrittr %>%
 #' @importFrom magrittr extract
 #' @importFrom magrittr extract2
-#' @importFrom pathological get_extension
 #' @importFrom stringi stri_read_lines
 #' @importFrom stringi stri_detect_regex
 #' @importFrom stringi stri_match_first_regex
 #' @importFrom tibble data_frame
+#' @importFrom tools file_ext
 #' @export
 read_po <- function(po_file)
 {
@@ -126,7 +126,7 @@ read_po <- function(po_file)
   source_type <- ifelse(
     substring(base_file_name, 1, 2) == "R-", "r", "c"
   )
-  file_type <- unname(get_extension(base_file_name))
+  file_type <- file_ext(base_file_name)
 
   metadata_line_index <- which(stri_detect_regex(lines, RX$metadata))
   metadata_lines <- lines[metadata_line_index]

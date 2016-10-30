@@ -20,9 +20,9 @@ Imports:
     devtools,
     dplyr,
     magrittr,
-    pathological,
     stringi,
     tibble,
+    tools,
     utils
 Suggests:
     testthat,
