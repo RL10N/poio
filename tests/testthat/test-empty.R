@@ -146,7 +146,7 @@ test_that(
 
 
 test_that(
-  "generate_po_from_pot can convert pot file to po file",
+  "generate_po_from_pot can convert empty pot file to po file",
   {
     pot_file <- system.file("extdata/R-empty-raw.pot", package = "poio")
     expected <- structure(
