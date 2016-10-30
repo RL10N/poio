@@ -1,4 +1,5 @@
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/0.1.0/active.svg)](http://www.repostatus.org/#active)
+[![Travis-CI Build Status](https://travis-ci.org/RL10N/poio.svg?branch=master)](https://travis-ci.org/RL10N/poio)
 
 # **poio**: Input/Output Functionality for "PO" and "POT" Message Translation Files
 
@@ -42,7 +43,7 @@ A typical workflow begins by generating a POT master translation file for a pack
 
 ```{r}
 pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
-readLines(pot_file)
+cat(readLines(pot_file), sep = "\n")
 ```
 
 To import the file, use `read_po`.  A description on the object's structure is shown in the "PO Objects" section below.

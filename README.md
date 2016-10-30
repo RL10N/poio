@@ -1,4 +1,5 @@
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/0.1.0/active.svg)](http://www.repostatus.org/#active)
+[![Travis-CI Build Status](https://travis-ci.org/RL10N/poio.svg?branch=master)](https://travis-ci.org/RL10N/poio)
 
 # **poio**: Input/Output Functionality for "PO" and "POT" Message Translation Files
 
@@ -45,75 +46,75 @@ A typical workflow begins by generating a POT master translation file for a pack
 
 ```r
 pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
-readLines(pot_file)
+cat(readLines(pot_file), sep = "\n")
 ```
 
 ```
-##  [1] "# This is a translator comment before the metadata."                  
-##  [2] "# Other comment types aren't useful here, and should be ignored."     
-##  [3] "# Like the \"fuzzy\" flags comment below."                            
-##  [4] "#, fuzzy"                                                             
-##  [5] "msgid \"\""                                                           
-##  [6] "msgstr \"\""                                                          
-##  [7] "\"Project-Id-Version: R 3.3.1\\n\""                                   
-##  [8] "\"Report-Msgid-Bugs-To: bugs.r-project.org\\n\""                      
-##  [9] "\"POT-Creation-Date: 2016-10-05 20:19\\n\""                           
-## [10] "\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\""                       
-## [11] "\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\""                    
-## [12] "\"Language-Team: LANGUAGE <LL@li.org>\\n\""                           
-## [13] "\"MIME-Version: 1.0\\n\""                                             
-## [14] "\"Content-Type: text/plain; charset=CHARSET\\n\""                     
-## [15] "\"Content-Transfer-Encoding: 8bit\\n\""                               
-## [16] ""                                                                     
-## [17] "# Now commencing Bryan Adams lyrics"                                  
-## [18] "# Because the song has numbers in it"                                 
-## [19] "#: some_source_file.R:123"                                            
-## [20] "msgid \"I got my first real six-string\""                             
-## [21] "msgstr \"\""                                                          
-## [22] ""                                                                     
-## [23] ""                                                                     
-## [24] ""                                                                     
-## [25] ""                                                                     
-## [26] "#        This one gets a \"c-format\" flags comment"                  
-## [27] "#because it uses c-style sprintf formatting"                          
-## [28] "#, c-format"                                                          
-## [29] "msgid \"Bought it at the %f-and-dime\""                               
-## [30] "msgstr \"\""                                                          
-## [31] ""                                                                     
-## [32] "# I don't think that the tools package supports generating"           
-## [33] "# source reference comments, but we should preserve them"             
-## [34] "# in case someone manually inserts them into their file"              
-## [35] "#: some_source_file.R:123"                                            
-## [36] "msgid \"Played it till my fingers bled\""                             
-## [37] "msgstr \"\""                                                          
-## [38] ""                                                                     
-## [39] "# Also uses xgettextf"                                                
-## [40] "#, c-format"                                                          
-## [41] "msgctxt \"Summer as in seasons, not a function that calculates sums\""
-## [42] "msgid \"It was the summer of '%d.\""                                  
-## [43] "msgstr \"\""                                                          
-## [44] ""                                                                     
-## [45] "# Technically the lyric says 'some' guys"                             
-## [46] "# but I want a countable example"                                     
-## [47] "msgid        \"Me and %d guy from school\""                           
-## [48] "msgid_plural \"Me and %d guys from school\""                          
-## [49] "msgstr[0]    \"\""                                                    
-## [50] "msgstr[1]    \"\""                                                    
-## [51] ""                                                                     
-## [52] "# Testing quote escaping"                                             
-## [53] "msgid \"Had a \\\"band\\\"\" and we tried real hard\""                
-## [54] "msgstr \"\""                                                          
-## [55] ""                                                                     
-## [56] "# Obsolete messages can also have other comments"                     
-## [57] "#~ msgid \"Jimmy quit and Jody got married\""                         
-## [58] "#~ msgstr \"\""                                                       
-## [59] ""                                                                     
-## [60] "# Countably obsolete. Apologies for bad English."                     
-## [61] "# Also note the bad number order."                                    
-## [62] "#~ msgid \"I should've known we'd never get far\""                    
-## [63] "#~ msgid_plural \"I should've known we'd never get fars\""            
-## [64] "#~ msgstr[1]\"\""                                                     
-## [65] "#~ msgstr[0]         \"\""
+## # This is a translator comment before the metadata.
+## # Other comment types aren't useful here, and should be ignored.
+## # Like the "fuzzy" flags comment below.
+## #, fuzzy
+## msgid ""
+## msgstr ""
+## "Project-Id-Version: R 3.3.1\n"
+## "Report-Msgid-Bugs-To: bugs.r-project.org\n"
+## "POT-Creation-Date: 2016-10-05 20:19\n"
+## "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+## "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+## "Language-Team: LANGUAGE <LL@li.org>\n"
+## "MIME-Version: 1.0\n"
+## "Content-Type: text/plain; charset=CHARSET\n"
+## "Content-Transfer-Encoding: 8bit\n"
+## 
+## # Now commencing Bryan Adams lyrics
+## # Because the song has numbers in it
+## #: some_source_file.R:123
+## msgid "I got my first real six-string"
+## msgstr ""
+## 
+## 
+## 
+## 
+## #        This one gets a "c-format" flags comment
+## #because it uses c-style sprintf formatting
+## #, c-format
+## msgid "Bought it at the %f-and-dime"
+## msgstr ""
+## 
+## # I don't think that the tools package supports generating
+## # source reference comments, but we should preserve them
+## # in case someone manually inserts them into their file
+## #: some_source_file.R:123
+## msgid "Played it till my fingers bled"
+## msgstr ""
+## 
+## # Also uses xgettextf
+## #, c-format
+## msgctxt "Summer as in seasons, not a function that calculates sums"
+## msgid "It was the summer of '%d."
+## msgstr ""
+## 
+## # Technically the lyric says 'some' guys
+## # but I want a countable example
+## msgid        "Me and %d guy from school"
+## msgid_plural "Me and %d guys from school"
+## msgstr[0]    ""
+## msgstr[1]    ""
+## 
+## # Testing quote escaping
+## msgid "Had a \"band\"" and we tried real hard"
+## msgstr ""
+## 
+## # Obsolete messages can also have other comments
+## #~ msgid "Jimmy quit and Jody got married"
+## #~ msgstr ""
+## 
+## # Countably obsolete. Apologies for bad English.
+## # Also note the bad number order.
+## #~ msgid "I should've known we'd never get far"
+## #~ msgid_plural "I should've known we'd never get fars"
+## #~ msgstr[1]""
+## #~ msgstr[0]         ""
 ```
 
 To import the file, use `read_po`.  A description on the object's structure is shown in the "PO Objects" section below.
@@ -136,7 +137,7 @@ To import the file, use `read_po`.  A description on the object's structure is s
 ## [3] "Like the \"fuzzy\" flags comment below."                       
 ## 
 ## $metadata
-## # A tibble: 9 <U+00D7> 2
+## # A tibble: 9 × 2
 ##                        name                       value
 ##                       <chr>                       <chr>
 ## 1        Project-Id-Version                     R 3.3.1
@@ -150,21 +151,21 @@ To import the file, use `read_po`.  A description on the object's structure is s
 ## 9 Content-Transfer-Encoding                        8bit
 ## 
 ## $direct
-## # A tibble: 6 <U+00D7> 8
-##                                      msgid msgstr is_obsolete
-##                                      <chr>  <chr>       <lgl>
-## 1           I got my first real six-string              FALSE
-## 2             Bought it at the %f-and-dime              FALSE
-## 3           Played it till my fingers bled              FALSE
-## 4                It was the summer of '%d.              FALSE
-## 5 Had a \\"band\\"" and we tried real hard              FALSE
-## 6          Jimmy quit and Jody got married               TRUE
-## # ... with 5 more variables: msgctxt <list>, translator_comments <list>,
+## # A tibble: 6 × 8
+##                                      msgid msgstr is_obsolete   msgctxt
+##                                      <chr>  <chr>       <lgl>    <list>
+## 1           I got my first real six-string              FALSE <chr [0]>
+## 2             Bought it at the %f-and-dime              FALSE <chr [0]>
+## 3           Played it till my fingers bled              FALSE <chr [0]>
+## 4                It was the summer of '%d.              FALSE <chr [1]>
+## 5 Had a \\"band\\"" and we tried real hard              FALSE <chr [0]>
+## 6          Jimmy quit and Jody got married               TRUE <chr [0]>
+## # ... with 4 more variables: translator_comments <list>,
 ## #   source_reference_comments <list>, flags_comments <list>,
 ## #   previous_string_comments <list>
 ## 
 ## $countable
-## # A tibble: 2 <U+00D7> 9
+## # A tibble: 2 × 9
 ##                                  msgid
 ##                                  <chr>
 ## 1            Me and %d guy from school
@@ -194,7 +195,7 @@ pot_fixed <- fix_metadata(pot)
 ```
 
 ```
-## Updating the PO-Revision-Date to '2016-10-23 21:20:51+0300'.
+## Updating the PO-Revision-Date to '2016-10-30 21:12:41+0300'.
 ```
 
 ```
