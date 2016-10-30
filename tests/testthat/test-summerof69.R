@@ -257,3 +257,32 @@ test_that(
     )
   }
 )
+
+test_that(
+  "write_po works on a complicated POT file",
+  {
+    pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
+
+    pot <- read_po(pot_file)
+    out_file <- tempfile("actual.pot")
+    write_po(pot, out_file)
+    pre <- readLines(pot_file)
+    # Lines 4, 23:25 ignored (unused comment, multiple blanks)
+    pre <- pre[-c(4, 23:25)]
+
+    # Replace arbitrary whitespace at start of comment line with a single space
+    pre <- stringi::stri_replace_first_regex(pre, "^#([,:|~])?\\s*", "#$1 ")
+
+    # Replace arbitrary whitespace after msgid or msgstr with a single space
+    pre <- stringi::stri_replace_first_regex(pre, "msg(id(?:_plural)?|str(?:\\[[0-9+]\\])?)\\s*", "msg$1 ")
+
+    # Move countable msg to end
+    # Swap msgstr[1], msgstr[0]
+    pre <- pre[c(1:40, 48:55, 41:47, 56:59, 61, 60)]
+
+    # Add blank line at end
+    pre <- c(pre, "")
+    post <- readLines(out_file)
+    expect_identical(post, pre)
+  }
+)
