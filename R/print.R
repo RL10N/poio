@@ -6,7 +6,11 @@
 #' @return The \code{x} argument in invisibly returned, but the function is
 #' mostly invoked for the side-effect of printing the \code{x} argument.
 #' @examples
+#' pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
+#' print(pot <- read_po(pot_file))
 #'
+#' # Use width = Inf to print all columns in metadata, direct, and countable
+#' print(pot, width = Inf)
 #' @export
 print.po <- function(x, ...)
 {
