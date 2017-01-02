@@ -66,12 +66,12 @@ the \code{direct} element, with two differences.
 Reads .PO and .POT translation files.
 }
 \examples{
-# read_po is ised for both po and pot files
+# read_po is used for both po and pot files
 pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
 (pot <- read_po(pot_file))
 }
 \references{
-Much of the logic for this functions was determined from reading
+Much of the logic for this function was determined from reading
 \url{http://pology.nedohodnik.net/doc/user/en_US/ch-poformat.html}
 }
 \seealso{
