@@ -134,7 +134,8 @@ test_that(
             "MIME-Version", "Content-Type", "Content-Transfer-Encoding"
           ),
           value = c(
-            "poio 0.0-1", "https://github.com/RL10N/poio/issues", "2016-10-05 20:19",
+            paste("poio", packageDescription("poio", fields = "Version")),
+            "https://github.com/RL10N/poio/issues", "2016-10-05 20:19",
             "DUMMY VALUE", "FULL NAME <EMAIL@ADDRESS>", "LANGUAGE <LL@li.org>",
             "1.0", "text/plain; charset=UTF-8", "8bit"
           )
