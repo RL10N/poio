@@ -1,6 +1,6 @@
 Package: poio
 Title: Input/Output Functionality for "PO" and "POT" Message Translation Files
-Version: 0.0-1
+Version: 0.0-2
 Author:
     Richard Cotton [aut,cre],
     Thomas Leeper [aut]
