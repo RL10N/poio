@@ -4,16 +4,16 @@
 \alias{summary.po}
 \title{Summarize a PO object}
 \usage{
-\method{summary}{po}(x, ...)
+\method{summary}{po}(object, ...)
 }
 \arguments{
-\item{x}{An object of class \code{po}.}
+\item{object}{An object of class \code{po}.}
 
 \item{...}{Arguments passed to \code{\link[base]{print.data.frame}}.}
 }
 \value{
-The \code{x} argument in invisibly returned, but the function is
-mostly invoked for the side-effect of printing the \code{x} argument.
+The \code{object} argument in invisibly returned, but the function is
+mostly invoked for the side-effect of printing the \code{object} argument.
 }
 \description{
 \code{\link[base]{summary}} method for PO objects. \code{summary} shows less
@@ -22,5 +22,8 @@ information than \code{print}.
 \examples{
 pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
 summary(pot <- read_po(pot_file))
+}
+\seealso{
+\code{\link{print.po}}
 }
 
