@@ -24,9 +24,8 @@ field of PO translation files.
 }
 \details{
 Valid "Language" field values consist of a language code taken from the
-\code{usual_lang} or \code{rare_lang} elements of this dataset, optionally
-followed by an underscore and a country code taken from the \code{country}
-element of this dataset.
+\code{language} element of this dataset, optionally followed by an underscore
+and a country code taken from the \code{country} element of this dataset.
 }
 \note{
 The \code{language} element of the dataset contains all of ISO 639-1 as

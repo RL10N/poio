@@ -5,9 +5,8 @@
 #' field of PO translation files.
 #'
 #' Valid "Language" field values consist of a language code taken from the
-#' \code{usual_lang} or \code{rare_lang} elements of this dataset, optionally
-#' followed by an underscore and a country code taken from the \code{country}
-#' element of this dataset.
+#' \code{language} element of this dataset, optionally followed by an underscore
+#' and a country code taken from the \code{country} element of this dataset.
 #'
 #' @format \code{language_codes} is a list with two character vector elements.
 #' \describe{
