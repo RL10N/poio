@@ -93,7 +93,7 @@ fix_metadata.data.frame <- function(x, pkg = ".", file_type, ...)
     # Can't fix the Language field, but we can check its validity
     check_language(lang)
     x <- x %>%
-      fix_plural_forms(x, lang)
+      fix_plural_forms(lang)
   }
   x
 }
