@@ -25,5 +25,7 @@ plural_forms$PluralFormHeader[plural_forms$EnglishName == "Macedonian"] <- "nplu
 # Aymara shouldn't have an acute on the last "a"
 plural_forms$EnglishName[stringi::stri_detect_fixed(plural_forms$EnglishName, "Aymar")] <- "Aymara"
 
+# TODO: Simplify PlurlaFormHeaders. For example, Polish and Kashubian have
+# slightly different strings with (I think) the same logic.
 
 save(plural_forms, file = "data/plural_forms.RData")
