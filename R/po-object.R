@@ -79,6 +79,9 @@ po_factory <- R6::R6Class(
         append_key(private$..direct)
       } else {
         value <- as_tibble(value)
+        # Ignore a msgkey field
+        # In case a user tries to do po2$direct <- po1$direct
+        value$msgkey <- NULL
         correct_cols <- c(
           "msgid", "msgstr", "is_obsolete", "msgctxt", "translator_comments",
           "source_reference_comments", "flags_comments", "previous_string_comments"
@@ -100,6 +103,8 @@ po_factory <- R6::R6Class(
         append_key(private$..countable)
       } else {
         value <- as_tibble(value)
+        # Ignore a msgkey field, as above
+        value$msgkey <- NULL
         correct_cols <- c(
           "msgid", "msgid_plural", "msgstr", "is_obsolete", "msgctxt", "translator_comments",
           "source_reference_comments", "flags_comments", "previous_string_comments"
@@ -171,7 +176,7 @@ as_list_of_character <- function(x, .xname = get_name_in_parent(x)) {
 #' @importFrom digest digest
 #' @importFrom dplyr mutate_
 #' @importFrom magrittr %>%
-append_key <- function(x) {3
+append_key <- function(x) {
   # (msgid, msgctxt) pairs ought to be unique, since the whole point of msgctxt
   # is to disambiguate the rare case that there are duplicate msgids
   # xxhash32 chosen because the hash is only 8 letters
