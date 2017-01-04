@@ -79,7 +79,7 @@ match_and_extract <- function(x, rx, drop = TRUE)
 #' formatting directives. R uses C-style formatting, which would imply a
 #' "c-format" flag.  For example %%d denotes an integer, and %%s denotes a
 #' string. "fuzzy" flags can appear when PO files are merged.}
-#' \item{previous_string_comment}{List of character. When PO files are merged
+#' \item{previous_string_comments}{List of character. When PO files are merged
 #' with an updated POT file ,and a fuzzy flag is generated, the old msgid is
 #' stored in a previous string comment.}
 #' }
@@ -292,15 +292,12 @@ read_po <- function(po_file)
       bind_rows()
   }
 
-  structure(
-    list(
-      source_type = source_type,
-      file_type = file_type,
-      initial_comments = initial_comments,
-      metadata = metadata,
-      direct = msgs_direct,
-      countable = msgs_countable
-    ),
-    class = c("po", "list")
+  po(
+    source_type = source_type,
+    file_type = file_type,
+    initial_comments = initial_comments,
+    metadata = metadata,
+    direct = msgs_direct,
+    countable = msgs_countable
   )
 }

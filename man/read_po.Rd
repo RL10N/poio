@@ -50,7 +50,7 @@ message occured in the source, in the form "filename:line".}
 formatting directives. R uses C-style formatting, which would imply a
 "c-format" flag.  For example %%d denotes an integer, and %%s denotes a
 string. "fuzzy" flags can appear when PO files are merged.}
-\item{previous_string_comment}{List of character. When PO files are merged
+\item{previous_string_comments}{List of character. When PO files are merged
 with an updated POT file ,and a fuzzy flag is generated, the old msgid is
 stored in a previous string comment.}
 }
