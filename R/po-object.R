@@ -56,6 +56,9 @@
 #' @importFrom R6 R6Class
 #' @importFrom tibble data_frame
 #' @importFrom tibble as_tibble
+#' @importFrom assertive.sets assert_are_set_equal
+#' @importFrom assertive.sets assert_is_superset
+#' @importFrom assertive.strings assert_all_are_non_missing_nor_empty_character
 #' @export
 po <- function(source_type, file_type, initial_comments, metadata, direct, countable) {
   po_factory$new(source_type, file_type, initial_comments, metadata, direct, countable)
