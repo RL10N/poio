@@ -46,6 +46,11 @@
 #' \item{msgid_plural}{Character. The plural form of the untranslated message.}
 #' \item{msgstr}{This is now a list of character (rather than character.)}
 #' }
+#'
+#' The \code{direct} and \code{countable} elements also have a read-only column
+#' named \code{msgkey} that acts as a key for the message. It is generated with
+#' \code{\link[digest]{digest}} and \code{algo = "xxhash32"} on the \code{msgid}
+#' and \code{msgctxt} fields.
 #' @references Much of the logic for this function was determined from reading
 #' \url{http://pology.nedohodnik.net/doc/user/en_US/ch-poformat.html}
 #' @importFrom R6 R6Class
@@ -168,7 +173,6 @@ po_factory <- R6::R6Class(
         assertive.sets::assert_are_set_equal(colnames(value), correct_cols)
         value$name <- assertive.base::coerce_to(value$name, "character")
         value$value <- assertive.base::coerce_to(value$value, "character")
-        # browser()
         assertive.strings::assert_all_are_non_missing_nor_empty_character(value$name)
         private$..metadata <- value
       }

@@ -64,6 +64,11 @@ the \code{direct} element, with two differences.
 \item{msgid_plural}{Character. The plural form of the untranslated message.}
 \item{msgstr}{This is now a list of character (rather than character.)}
 }
+
+The \code{direct} and \code{countable} elements also have a read-only column
+named \code{msgkey} that acts as a key for the message. It is generated with
+\code{\link[digest]{digest}} and \code{algo = "xxhash32"} on the \code{msgid}
+and \code{msgctxt} fields.
 }
 \references{
 Much of the logic for this function was determined from reading
