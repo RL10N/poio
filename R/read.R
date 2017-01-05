@@ -39,59 +39,9 @@ match_and_extract <- function(x, rx, drop = TRUE)
 #'
 #' Reads .PO and .POT translation files.
 #' @param po_file A string giving a path to a PO file.
-#' @return An object of class \code{po}, which is a list with the following
-#' components:
-#' \describe{
-#' \item{source_type}{Either "r" or "c", depending upon whether the messages
-#' originated from R-level code, or C-level code.  Determined from the file
-#' name.}
-#' \item{file_type}{Either "po" or "pot", depending upon whether the messages
-#' originated from a PO (language-specific) or POT (master translation) file.
-#' Determined from the file name.}
-#' \item{initial_comments}{A character vector of comments added by the
-#' translator.}
-#' \item{metadata}{A \code{\link[tibble]{data_frame}} of file metadata with
-#' columns "name" and "value".}
-#' \item{direct}{A \code{\link[tibble]{data_frame}} of messages with a direct
-#' translation, as created by \code{\link[base]{stop}},
-#' \code{\link[base]{warning}}, \code{\link[base]{message}} or
-#' \code{\link[base]{gettext}}; its columns are described below.}
-#' \item{countable}{A data frame of messages where the translation depends upon
-#' a countable value, as created by \code{\link[base]{ngettext}}; its columns are
-#' described below.}
-#' }
-#'
-#' The \code{direct} element of the \code{po} object has the following columns.
-#' \describe{
-#' \item{msgid}{Character. The untranslated (should be American English)
-#' message.}
-#' \item{msgstr}{Character. The translated message, or empty strings in the case
-#' of POT files.}
-#' \item{is_obsolete}{Logical. Is the message obsolete?}
-#' \item{msgctxt}{List of character. Disambiguating context information to allow
-#' multiple messages with the same ID.}
-#' \item{translator_comments}{List of character. Comments added by the
-#' translator, typically to explain unclear messages, or why translation choices
-#' were made.}
-#' \item{source_reference_comments}{List of character. Links to where the
-#' message occured in the source, in the form "filename:line".}
-#' \item{flags_comments}{List of character. Typically used to describe
-#' formatting directives. R uses C-style formatting, which would imply a
-#' "c-format" flag.  For example %%d denotes an integer, and %%s denotes a
-#' string. "fuzzy" flags can appear when PO files are merged.}
-#' \item{previous_string_comments}{List of character. When PO files are merged
-#' with an updated POT file ,and a fuzzy flag is generated, the old msgid is
-#' stored in a previous string comment.}
-#' }
-#'
-#' The \code{countable} element of the \code{po} object takes the same form as
-#' the \code{direct} element, with two differences.
-#' \describe{
-#' \item{msgid_plural}{Character. The plural form of the untranslated message.}
-#' \item{msgstr}{This is now a list of character (rather than character.)}
-#' }
-#' @references Much of the logic for this function was determined from reading
-#' \url{http://pology.nedohodnik.net/doc/user/en_US/ch-poformat.html}
+#' @return An object of class \code{\link{po}}. The \code{source_type} and
+#' \code{file_type} elements are automatically determined from the file
+#' name.
 #' @seealso \code{\link[tools]{xgettext}}
 #' @examples
 #' # read_po is used for both po and pot files
