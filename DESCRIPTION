@@ -18,6 +18,7 @@ Imports:
     assertive.types,
     assertive.files,
     assertive.sets,
+    assertive.strings,
     devtools,
     digest,
     dplyr,
