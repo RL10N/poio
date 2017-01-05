@@ -14,13 +14,14 @@
 #' @export
 get_n_plural_forms <- function(x, default = 2L, ...)
 {
+
   UseMethod("get_n_plural_forms")
 }
 
 #' @export
-get_n_plural_forms.po <- function(x, default = 2L, ...)
+get_n_plural_forms.po <- function(x, ...)
 {
-  get_n_plural_forms(x$metadata)
+  x$n_plural_forms
 }
 
 #' @importFrom assertive.properties is_empty

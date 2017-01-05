@@ -185,6 +185,12 @@ po_factory <- R6::R6Class(
         value <- value[, c(compulsory_cols, optional_cols)]
         private$..countable <- value
       }
+    },
+    n_plural_forms = function()
+    {
+      # Can't have this completely defined in here, since read_po()
+      # needs to use it before the po object is created.
+      get_n_plural_forms(self$metadata)
     }
   ),
   public = list(
