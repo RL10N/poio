@@ -3,9 +3,12 @@
 \name{fix_metadata}
 \alias{fix_metadata}
 \alias{fix_metadata.data.frame}
+\alias{fix_metadata.po}
 \title{Fix metadata in a PO object}
 \usage{
 fix_metadata(x, pkg = ".", ...)
+
+\method{fix_metadata}{po}(x, pkg = ".", clone = TRUE, ...)
 
 \method{fix_metadata}{data.frame}(x, pkg = ".", file_type, ...)
 }
@@ -17,6 +20,10 @@ fix_metadata(x, pkg = ".", ...)
 \code{package} object, as created by \code{\link[devtools]{as.package}}.}
 
 \item{...}{Arguments passed between methods.}
+
+\item{clone}{Logical. If \code{TRUE}, the \code{po} object is cloned before
+the metadata is fixed. This has a slight performance cost, but is easier to
+reason about.}
 
 \item{file_type}{A string giving the file type; either "po" or "pot".}
 }
@@ -42,8 +49,9 @@ argument.}
 \item{PO-Revision-Date}{The current date and time, in format
 "%Y-%m-%d %H:%M:%S%z". See \code{\link[base]{strptime}} for details of date
 and time formatting specifications.}
-\item{Last-Translator}{Not auto-updated.}
-\item{Language-Team}{Not auto-updated.}
+\item{Last-Translator}{Your name and email, creepily autodetected by
+\code{\link[whoami]{whoami}}.}
+\item{Language-Team}{Not auto-updated. Invent your own team name!}
 \item{MIME-Version}{Always changed to "1.0".}
 \item{Content-Type}{Always changed to "text/plain; charset=UTF-8".}
 \item{Content-Transfer-Encoding}{Always changed to "8bit".}

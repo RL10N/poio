@@ -7,6 +7,9 @@
 #' @param pkg A path to the root of an R package source directory, or a
 #' \code{package} object, as created by \code{\link[devtools]{as.package}}.
 #' @param file_type A string giving the file type; either "po" or "pot".
+#' @param clone Logical. If \code{TRUE}, the \code{po} object is cloned before
+#' the metadata is fixed. This has a slight performance cost, but is easier to
+#' reason about.
 #' @param ... Arguments passed between methods.
 #' @return An object of the same type as the input, but with the metadata fixed.
 #' @details Columns are added to ensure that the metadata data frame contains
@@ -23,8 +26,9 @@
 #' \item{PO-Revision-Date}{The current date and time, in format
 #' "%Y-%m-%d %H:%M:%S%z". See \code{\link[base]{strptime}} for details of date
 #' and time formatting specifications.}
-#' \item{Last-Translator}{Not auto-updated.}
-#' \item{Language-Team}{Not auto-updated.}
+#' \item{Last-Translator}{Your name and email, creepily autodetected by
+#' \code{\link[whoami]{whoami}}.}
+#' \item{Language-Team}{Not auto-updated. Invent your own team name!}
 #' \item{MIME-Version}{Always changed to "1.0".}
 #' \item{Content-Type}{Always changed to "text/plain; charset=UTF-8".}
 #' \item{Content-Transfer-Encoding}{Always changed to "8bit".}
@@ -48,9 +52,13 @@ fix_metadata <- function(x, pkg = ".", ...)
   UseMethod("fix_metadata")
 }
 
+#' @rdname fix_metadata
 #' @export
-fix_metadata.po <- function(x, pkg = ".", ...)
+fix_metadata.po <- function(x, pkg = ".", clone = TRUE, ...)
 {
+  if(clone) {
+    x <- x$clone()
+  }
   x$metadata <- fix_metadata(x$metadata, pkg = pkg, file_type = x$file_type)
   x
 }
@@ -72,6 +80,7 @@ fix_metadata.data.frame <- function(x, pkg = ".", file_type, ...)
     fix_metadata_project_id_version(pkg) %>%
     fix_report_msgid_bugs_to(pkg) %>%
     fix_po_revision_date() %>%
+    fix_last_translator() %>%
     fix_mime_version() %>%
     fix_content_type() %>%
     fix_content_transfer_encoding()
@@ -177,6 +186,15 @@ fix_po_revision_date <- function(x)
 {
   expected <- format(Sys.time(), "%Y-%m-%d %H:%M:%S%z")
   fix_field(x, "PO-Revision-Date", expected)
+}
+
+#' @importFrom assertive.base parenthesize
+#' @importFrom whoami fullname
+#' @importFrom whoami email_address
+fix_last_translator <- function(x)
+{
+  expected <- paste(fullname(), parenthesize(email_address(), "angle_brackets"))
+  fix_field(x, "Last-Translator", expected)
 }
 
 fix_mime_version <- function(x)

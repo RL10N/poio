@@ -41,16 +41,16 @@ pot <- read_po(pot_file)
 pot_fixed <- fix_metadata(pot, system.file(package = "poio"))
 
 # Call generate_po_from_pot for each language that you want to translate to
-po <- lapply(
+two_pos <- lapply(
   c(German = "de", Qatari_Arabic = "ar_QA"),
   generate_po_from_pot,
   x = pot_fixed
 )
 
 # Notice the Language and Plural-forms elements in the metadata
-po$German$metadata
+two_pos$German$metadata
 # Also notice that the countable msgstr elements for Arabic now
 # have length 6, since Arabic has 6 plural forms
-po$Qatari_Arabic$countable$msgstr
+two_pos$Qatari_Arabic$countable$msgstr
 }
 

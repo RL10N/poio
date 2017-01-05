@@ -115,6 +115,7 @@ test_that(
   "fix_metadata works on a complicated POT file",
   {
     pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
+    me <- paste0(whoami::fullname(), " <", whoami::email_address(), ">")
     expected <- po(
       source_type = "r",
       file_type   = "pot",
@@ -132,7 +133,7 @@ test_that(
         value = c(
           paste("poio", packageDescription("poio", fields = "Version")),
           "https://github.com/RL10N/poio/issues", "2016-10-05 20:19",
-          "DUMMY VALUE", "FULL NAME <EMAIL@ADDRESS>", "LANGUAGE <LL@li.org>",
+          "DUMMY VALUE", me, "LANGUAGE <LL@li.org>",
           "1.0", "text/plain; charset=UTF-8", "8bit"
         )
       ),

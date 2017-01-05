@@ -26,7 +26,8 @@ Imports:
     stringi,
     tibble,
     tools,
-    utils
+    utils,
+    whoami
 Suggests:
     testthat,
     rebus.datetimes
