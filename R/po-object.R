@@ -115,6 +115,9 @@ po_factory <- R6::R6Class(
     # @param .xname Not intended to be used directly.
     # @return A list of character vectors.
     as_list_of_character = function(x, .xname = assertive.base::get_name_in_parent(x)) {
+      if(length(x) == 0L) {
+        return(list())
+      }
       force(.xname)
       if(is.recursive(x)) {
         x <- coerce_to(x, "list")
