@@ -239,11 +239,17 @@ po_factory <- R6::R6Class(
         private$..countable <- value
       }
     },
-    n_plural_forms = function()
-    {
+    n_plural_forms = function() {
       # Can't have this completely defined in here, since read_po()
       # needs to use it before the po object is created.
       get_n_plural_forms(self$metadata)
+    },
+    lang = function() {
+      i <- which(self$metadata$name == "Language")
+      if(length(i) == 0L) {
+        return(NA_character_)
+      }
+      self$metadata$value[i]
     }
   ),
   public = list(
