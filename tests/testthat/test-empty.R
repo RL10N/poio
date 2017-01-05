@@ -55,7 +55,7 @@ test_that(
   "fix_metadata works on an empty pot file",
   {
     pot_file <- system.file("extdata/R-empty-raw.pot", package = "poio")
-    me <- paste0(whoami::fullname(), " <", whoami::email_address(), ">")
+    me <- paste0(whoami::fullname("FULL NAME"), " <", whoami::email_address("EMAIL@ADDRESS"), ">")
     expected <- po(
       source_type = "r",
       file_type   = "pot",

@@ -50,7 +50,7 @@ argument.}
 "%Y-%m-%d %H:%M:%S%z". See \code{\link[base]{strptime}} for details of date
 and time formatting specifications.}
 \item{Last-Translator}{Your name and email, creepily autodetected by
-\code{\link[whoami]{whoami}}.}
+\code{\link[whoami]{whoami}}, where possible.}
 \item{Language-Team}{Not auto-updated. Invent your own team name!}
 \item{MIME-Version}{Always changed to "1.0".}
 \item{Content-Type}{Always changed to "text/plain; charset=UTF-8".}
