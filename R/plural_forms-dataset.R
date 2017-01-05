@@ -4,7 +4,7 @@
 #' elements in a PO file.
 #'
 #' @format
-#' \code{plural_forms} is a data frame with 3 character columns and 142 rows:
+#' \code{plural_forms} is a data frame with 3 character columns and 1 numeric column and 142 rows:
 #' \describe{
 #' \item{ISO}{The ISO 639 specification of the language.  Usually this is the
 #' two letter ISO 639-1 name, but some three letter ISO 639-2 names are also
@@ -12,6 +12,7 @@
 #' \item{EnglishName}{How the language is known in English.}
 #' \item{PluralFormHeader}{The GNU gettext specification of how plural forms
 #' are specified in the language.}
+#' \item{nplurals}{A numeric value specifying the number of plural forms.}
 #' }
 #' @references This dataset was originally taken from
 #' \url{http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html}
