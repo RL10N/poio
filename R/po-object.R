@@ -173,6 +173,7 @@ po_factory <- R6::R6Class(
         assertive.sets::assert_are_set_equal(colnames(value), correct_cols)
         value$name <- assertive.base::coerce_to(value$name, "character")
         value$value <- assertive.base::coerce_to(value$value, "character")
+        assertive.properties::assert_has_no_duplicates(value$name)
         assertive.strings::assert_all_are_non_missing_nor_empty_character(value$name)
         private$..metadata <- value
       }
