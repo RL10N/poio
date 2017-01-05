@@ -24,19 +24,17 @@ write_po <- function(po, po_file = NULL, ...)
 write_po.po <- function(po, po_file = NULL, ...)
 {
   n_plurals <- get_n_plural_forms(po)
-  lines <- with(
-    po,
-    {
-      c(
-        initial_comments_to_lines(initial_comments),
-        'msgid ""',
-        'msgstr ""',
-        metadata_to_lines(metadata),
-        '',
-        direct_msgs_to_lines(direct),
-        countable_msgs_to_lines(countable, n_plurals)
-      )
-    }
+  # with(r6obj, {}) is broken. See
+  # https://github.com/wch/R6/issues/111
+  # Need to explicitly write po$
+  lines <- c(
+    initial_comments_to_lines(po$initial_comments),
+    'msgid ""',
+    'msgstr ""',
+    metadata_to_lines(po$metadata),
+    '',
+    direct_msgs_to_lines(po$direct),
+    countable_msgs_to_lines(po$countable, n_plurals)
   )
 
   if(is.null(po_file)) # auto-generate file name

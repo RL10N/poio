@@ -45,6 +45,7 @@ generate_po_from_pot <- function(x, lang, ...)
 generate_po_from_pot.po <- function(x, lang, ...)
 {
   check_language(lang)
+  x <- x$clone()
   x$file_type <- "po"
   # Add or fix the Language and Plural-Forms elements of the metadata
   plural_forms <- lookup_plural_forms_for_language(lang)
