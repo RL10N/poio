@@ -19,6 +19,7 @@ Imports:
     assertive.files,
     assertive.sets,
     devtools,
+    digest,
     dplyr,
     magrittr,
     R6,
