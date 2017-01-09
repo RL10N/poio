@@ -6,11 +6,12 @@
 \alias{fix_metadata.po}
 \title{Fix metadata in a PO object}
 \usage{
-fix_metadata(x, pkg = ".", ...)
+fix_metadata(x, pkg = ".", ..., .dots = list())
 
-\method{fix_metadata}{po}(x, pkg = ".", clone = TRUE, ...)
+\method{fix_metadata}{po}(x, pkg = ".", clone = TRUE, ..., .dots = list())
 
-\method{fix_metadata}{data.frame}(x, pkg = ".", file_type, ...)
+\method{fix_metadata}{data.frame}(x, pkg = ".", file_type, ...,
+  .dots = list())
 }
 \arguments{
 \item{x}{An object of class \code{po}, or the data frame from the
@@ -19,7 +20,9 @@ fix_metadata(x, pkg = ".", ...)
 \item{pkg}{A path to the root of an R package source directory, or a
 \code{package} object, as created by \code{\link[devtools]{as.package}}.}
 
-\item{...}{Arguments passed between methods.}
+\item{...}{Named arguments of new metadata values.}
+
+\item{.dots}{A named \code{list} of new metadata values.}
 
 \item{clone}{Logical. If \code{TRUE}, the \code{po} object is cloned before
 the metadata is fixed. This has a slight performance cost, but is easier to
@@ -66,6 +69,16 @@ Additionally PO, but not POT, files have these rows:
 pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
 pot <- read_po(pot_file)
 pot_fixed <- fix_metadata(pot, system.file(package = "poio"))
+
+# Choose your own metadata
+pot_fixed2 <- fix_metadata(
+  pot,
+  system.file(package = "poio"),
+  "Last-Translator" = "Dr. Daniel Jackson <djackson@stargate.com>",
+  .dots  = list(
+    "Language-Team" = "Team RL10N!"
+  )
+)
 
 # Compare the metadata before and after
 pot$metadata

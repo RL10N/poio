@@ -10,7 +10,8 @@
 #' @param clone Logical. If \code{TRUE}, the \code{po} object is cloned before
 #' the metadata is fixed. This has a slight performance cost, but is easier to
 #' reason about.
-#' @param ... Arguments passed between methods.
+#' @param ... Named arguments of new metadata values.
+#' @param .dots A named \code{list} of new metadata values.
 #' @return An object of the same type as the input, but with the metadata fixed.
 #' @details Columns are added to ensure that the metadata data frame contains
 #' character columns named "name" and "value". Likewise rows are added or
@@ -43,33 +44,45 @@
 #' pot <- read_po(pot_file)
 #' pot_fixed <- fix_metadata(pot, system.file(package = "poio"))
 #'
+#' # Choose your own metadata
+#' pot_fixed2 <- fix_metadata(
+#'   pot,
+#'   system.file(package = "poio"),
+#'   "Last-Translator" = "Dr. Daniel Jackson <djackson@stargate.com>",
+#'   .dots  = list(
+#'     "Language-Team" = "Team RL10N!"
+#'   )
+#' )
+#'
 #' # Compare the metadata before and after
 #' pot$metadata
 #' pot_fixed$metadata
 #' @export
-fix_metadata <- function(x, pkg = ".", ...)
+fix_metadata <- function(x, pkg = ".", ..., .dots = list())
 {
   UseMethod("fix_metadata")
 }
 
 #' @rdname fix_metadata
 #' @export
-fix_metadata.po <- function(x, pkg = ".", clone = TRUE, ...)
+fix_metadata.po <- function(x, pkg = ".", clone = TRUE, ..., .dots = list())
 {
   if(clone) {
     x <- x$clone()
   }
-  x$metadata <- fix_metadata(x$metadata, pkg = pkg, file_type = x$file_type)
+  x$metadata <- fix_metadata(x$metadata, pkg = pkg, file_type = x$file_type, ..., .dots = .dots)
   x
 }
 
 #' @rdname fix_metadata
 #' @importFrom assertive.base coerce_to
+#' @importFrom assertive.base merge_dots_with_list
 #' @importFrom devtools as.package
 #' @importFrom magrittr %>%
 #' @export
-fix_metadata.data.frame <- function(x, pkg = ".", file_type, ...)
+fix_metadata.data.frame <- function(x, pkg = ".", file_type, ..., .dots = list())
 {
+  .dots = merge_dots_with_list(..., l = .dots)
   if(is.character(pkg))
   {
     pkg <- as.package(pkg)
@@ -77,13 +90,14 @@ fix_metadata.data.frame <- function(x, pkg = ".", file_type, ...)
   x <- x %>%
     fix_metadata_columns() %>%
     fix_metadata_rows(file_type = file_type) %>%
-    fix_metadata_project_id_version(pkg) %>%
-    fix_report_msgid_bugs_to(pkg) %>%
-    fix_po_revision_date() %>%
-    fix_last_translator() %>%
-    fix_mime_version() %>%
-    fix_content_type() %>%
-    fix_content_transfer_encoding()
+    fix_metadata_project_id_version(pkg, .dots[["Project-Id-Version"]]) %>%
+    fix_report_msgid_bugs_to(pkg, .dots[["Report-Msgid-Bugs-To"]]) %>%
+    fix_po_revision_date(.dots[["PO-Revision-Date"]]) %>%
+    fix_last_translator(.dots[["Last-Translator"]]) %>%
+    fix_language_team(.dots[["Language-Team"]]) %>%
+    fix_mime_version(.dots[["MIME-Version"]]) %>%
+    fix_content_type(.dots[["Content-Type"]]) %>%
+    fix_content_transfer_encoding(.dots[["Content-Transfer-Encoding"]])
   if(file_type == "po")
   {
     lang <- x %>%
@@ -165,62 +179,75 @@ fix_metadata_rows <- function(x, file_type = c("po", "pot"))
   x
 }
 
-fix_metadata_project_id_version <- function(x, pkg)
+fix_metadata_project_id_version <- function(x, pkg, newvalue)
 {
   # Don't use with fn here since it throws an error if the fields don't exist
   # We want to use the warning mechanism in fix_field instead.
   # Notice that "package" and "version" are lowercase in the indexing since
   # devtools::as.package converts them, but uppercase in desc_fields since
   # those are the originals in the DESCRIPTION file.
-  expected <- paste(pkg[["package"]], pkg[["version"]])
+  expected <- newvalue %mn% paste(pkg[["package"]], pkg[["version"]])
   fix_field(x, "Project-Id-Version", expected, pkg, c("Package", "Version"))
 }
 
-fix_report_msgid_bugs_to <- function(x, pkg)
+fix_report_msgid_bugs_to <- function(x, pkg, newvalue)
 {
-  expected <- pkg[["bugreports"]]
+  expected <- newvalue %mn% pkg[["bugreports"]]
   fix_field(x, "Report-Msgid-Bugs-To", expected, pkg, "BugReports")
 }
 
-fix_po_revision_date <- function(x)
+fix_po_revision_date <- function(x, newvalue)
 {
-  expected <- format(Sys.time(), "%Y-%m-%d %H:%M:%S%z")
-  fix_field(x, "PO-Revision-Date", expected)
+  expected <- newvalue %mn% format(Sys.time(), "%Y-%m-%d %H:%M:%S%z")
+  fix_field(x, "PO-Revision-Date", expected = expected)
 }
 
 #' @importFrom assertive.base parenthesize
 #' @importFrom whoami fullname
 #' @importFrom whoami email_address
-fix_last_translator <- function(x)
+fix_last_translator <- function(x, newvalue)
 {
-  expected <- paste(fullname("FULL NAME"), parenthesize(email_address("EMAIL@ADDRESS"), "angle_brackets"))
-  fix_field(x, "Last-Translator", expected)
+  expected <- newvalue %mn%
+    paste(
+      fullname("FULL NAME"),
+      parenthesize(email_address("EMAIL@ADDRESS"), "angle_brackets")
+    )
+  fix_field(x, "Last-Translator", expected = expected)
 }
 
-fix_mime_version <- function(x)
+fix_language_team <- function(x, newvalue)
 {
-  fix_field(x, "MIME-Version", expected = "1.0")
+  expected <- newvalue %mn% ""
+  fix_field(x, "Language-Team", expected = expected)
 }
 
-fix_content_type <- function(x)
+fix_mime_version <- function(x, newvalue)
 {
-  fix_field(x, "Content-Type", expected = "text/plain; charset=UTF-8")
+  expected <- newvalue %mn% "1.0"
+  fix_field(x, "MIME-Version", expected = expected)
 }
 
-fix_content_transfer_encoding <- function(x)
+fix_content_type <- function(x, newvalue)
 {
-  fix_field(x, "Content-Transfer-Encoding", expected = "8bit")
+  expected <- newvalue %mn% "text/plain; charset=UTF-8"
+  fix_field(x, "Content-Type", expected = expected)
+}
+
+fix_content_transfer_encoding <- function(x, newvalue)
+{
+  expected <- newvalue %mn% "8bit"
+  fix_field(x, "Content-Transfer-Encoding", expected = expected)
 }
 
 
-fix_plural_forms <- function(x, lang)
+fix_plural_forms <- function(x, lang, newvalue)
 {
-  expected <- lookup_plural_forms_for_language(lang)
+  expected <- newvalue %mn% lookup_plural_forms_for_language(lang)
   if(is.na(expected)) # unknown lang, already warned about
   {
     return(x)
   }
-  fix_field(x, "Plural-Forms", expected)
+  fix_field(x, "Plural-Forms", expected = expected)
 }
 
 #' @importFrom assertive.base bapply
@@ -284,4 +311,9 @@ check_language <- function(lang)
     warning(wrn)
   }
   invisible(ok)
+}
+
+
+`%mn%` <- function(x, y) {
+  if(!missing(x) && !is.null(x)) x else y
 }

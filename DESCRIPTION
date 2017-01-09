@@ -1,6 +1,6 @@
 Package: poio
 Title: Input/Output Functionality for "PO" and "POT" Message Translation Files
-Version: 0.0-2
+Version: 0.0-3
 Maintainer: Richard Cotton <richierocks@gmail.com>
 URL: https://github.com/RL10N/poio
 BugReports: https://github.com/RL10N/poio/issues
