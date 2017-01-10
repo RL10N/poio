@@ -133,7 +133,7 @@ test_that(
         value = c(
           paste("poio", packageDescription("poio", fields = "Version")),
           "https://github.com/RL10N/poio/issues", "2016-10-05 20:19",
-          "DUMMY VALUE", me, "LANGUAGE <LL@li.org>",
+          "DUMMY VALUE", me, "",
           "1.0", "text/plain; charset=UTF-8", "8bit"
         )
       ),
