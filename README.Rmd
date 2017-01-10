@@ -42,6 +42,7 @@ devtools::install_bitbucket("RL10N/poio")
 A typical workflow begins by generating a POT master translation file for a package using `tools::xgettext2pot`.  In this case, we'll use a sample file stored in the **poio** package.  The contents look like this:
 
 ```{r}
+library(poio)
 pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
 cat(readLines(pot_file), sep = "\n")
 ```
@@ -52,10 +53,11 @@ To import the file, use `read_po`.  A description on the object's structure is s
 (pot <- read_po(pot_file))
 ```
 
-`tools::xgettext2pot` makes a mess of some of the metadata element that it generates, so they need fixing.
+`tools::xgettext2pot` makes a mess of some of the metadata element that it generates, so they need fixing. `fix_metadata` auto-guesses sensible options, but you can manually set values if you prefer.
 
 ```{r}
-pot_fixed <- fix_metadata(pot)
+pot_fixed <- fix_metadata(pot, "Language-Team" = "Team RL10N!")
+pot_fixed$metadata
 ```
 
 Now you need to choose some languages to translate your messages into.  Suitable language codes can be found in the `language_codes` dataset included in the package.

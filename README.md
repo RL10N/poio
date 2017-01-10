@@ -45,6 +45,7 @@ A typical workflow begins by generating a POT master translation file for a pack
 
 
 ```r
+library(poio)
 pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
 cat(readLines(pot_file), sep = "\n")
 ```
@@ -125,18 +126,16 @@ To import the file, use `read_po`.  A description on the object's structure is s
 ```
 
 ```
-## $source_type
-## [1] "r"
+##              _                     
+## Source Type: r code                
+## File Type:   pot master translation
 ## 
-## $file_type
-## [1] "pot"
+## Initial comments:
+## [1] This is a translator comment before the metadata.             
+## [2] Other comment types aren't useful here, and should be ignored.
+## [3] Like the "fuzzy" flags comment below.                         
 ## 
-## $initial_comments
-## [1] "This is a translator comment before the metadata."             
-## [2] "Other comment types aren't useful here, and should be ignored."
-## [3] "Like the \"fuzzy\" flags comment below."                       
-## 
-## $metadata
+## Metadata:
 ## # A tibble: 9 × 2
 ##                        name                       value
 ##                       <chr>                       <chr>
@@ -150,8 +149,8 @@ To import the file, use `read_po`.  A description on the object's structure is s
 ## 8              Content-Type text/plain; charset=CHARSET
 ## 9 Content-Transfer-Encoding                        8bit
 ## 
-## $direct
-## # A tibble: 6 × 8
+## Direct Translations:
+## # A tibble: 6 × 9
 ##                                      msgid msgstr is_obsolete   msgctxt
 ##                                      <chr>  <chr>       <lgl>    <list>
 ## 1           I got my first real six-string              FALSE <chr [0]>
@@ -160,34 +159,31 @@ To import the file, use `read_po`.  A description on the object's structure is s
 ## 4                It was the summer of '%d.              FALSE <chr [1]>
 ## 5 Had a \\"band\\"" and we tried real hard              FALSE <chr [0]>
 ## 6          Jimmy quit and Jody got married               TRUE <chr [0]>
-## # ... with 4 more variables: translator_comments <list>,
+## # ... with 5 more variables: translator_comments <list>,
 ## #   source_reference_comments <list>, flags_comments <list>,
-## #   previous_string_comments <list>
+## #   previous_string_comments <list>, msgkey <chr>
 ## 
-## $countable
-## # A tibble: 2 × 9
+## Countable Translations:
+## # A tibble: 2 × 10
 ##                                  msgid
 ##                                  <chr>
 ## 1            Me and %d guy from school
 ## 2 I should've known we'd never get far
-## # ... with 8 more variables: msgid_plural <chr>, msgstr <list>,
+## # ... with 9 more variables: msgid_plural <chr>, msgstr <list>,
 ## #   is_obsolete <lgl>, msgctxt <list>, translator_comments <list>,
 ## #   source_reference_comments <list>, flags_comments <list>,
-## #   previous_string_comments <list>
-## 
-## attr(,"class")
-## [1] "po"   "list"
+## #   previous_string_comments <list>, msgkey <chr>
 ```
 
-`tools::xgettext2pot` makes a mess of some of the metadata element that it generates, so they need fixing.
+`tools::xgettext2pot` makes a mess of some of the metadata element that it generates, so they need fixing. `fix_metadata` auto-guesses sensible options, but you can manually set values if you prefer.
 
 
 ```r
-pot_fixed <- fix_metadata(pot)
+pot_fixed <- fix_metadata(pot, "Language-Team" = "Team RL10N!")
 ```
 
 ```
-## Updating the Project-Id-Version to 'poio 0.0-1'.
+## Updating the Project-Id-Version to 'poio 0.0-3'.
 ```
 
 ```
@@ -195,11 +191,38 @@ pot_fixed <- fix_metadata(pot)
 ```
 
 ```
-## Updating the PO-Revision-Date to '2016-10-30 21:12:41+0300'.
+## Updating the PO-Revision-Date to '2017-01-09 20:55:22-0500'.
+```
+
+```
+## Updating the Last-Translator to 'Richie Cotton <richierocks@gmail.com>'.
+```
+
+```
+## Updating the Language-Team to 'Team RL10N!'.
 ```
 
 ```
 ## Updating the Content-Type to 'text/plain; charset=UTF-8'.
+```
+
+```r
+pot_fixed$metadata
+```
+
+```
+## # A tibble: 9 × 2
+##                        name                                 value
+##                       <chr>                                 <chr>
+## 1        Project-Id-Version                            poio 0.0-3
+## 2      Report-Msgid-Bugs-To  https://github.com/RL10N/poio/issues
+## 3         POT-Creation-Date                      2016-10-05 20:19
+## 4          PO-Revision-Date              2017-01-09 20:55:22-0500
+## 5           Last-Translator Richie Cotton <richierocks@gmail.com>
+## 6             Language-Team                           Team RL10N!
+## 7              MIME-Version                                   1.0
+## 8              Content-Type             text/plain; charset=UTF-8
+## 9 Content-Transfer-Encoding                                  8bit
 ```
 
 Now you need to choose some languages to translate your messages into.  Suitable language codes can be found in the `language_codes` dataset included in the package.
@@ -212,8 +235,10 @@ str(language_codes, vec.len = 8)
 
 ```
 ## List of 2
-##  $ language: chr [1:245] "aa" "ab" "ace" "ae" "af" "ak" "am" "an" ...
-##  $ country : chr [1:249] "AD" "AE" "AF" "AG" "AI" "AL" "AM" "AO" ...
+##  $ language: Named chr [1:245] "aa" "ab" "ace" "ae" "af" "ak" "am" "an" ...
+##   ..- attr(*, "names")= chr [1:245] "Afar" "Abkhazian" "Achinese" "Avestan" "Afrikaans" "Akan" "Amharic" "Aragonese" ...
+##  $ country : Named chr [1:249] "AF" "AX" "AL" "DZ" "AS" "AD" "AO" "AI" ...
+##   ..- attr(*, "names")= chr [1:249] "Afghanistan" "Åland Islands" "Albania" "Algeria" "American Samoa" "Andorra" "Angola" "Anguilla" ...
 ```
 
 Then, for each language that you want to create a translation for, generate a `po` object and write it to file. If your current working directory is the root of your package, the correct file name is automatically generated.
