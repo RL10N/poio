@@ -70,6 +70,16 @@ fix_metadata.po <- function(x, pkg = ".", clone = TRUE, file_type = x$file_type,
   if(clone) {
     x <- x$clone()
   }
+  # file_type arg is included to fix issue #17, but it's a bit silly to override
+  # for po inputs
+  if(file_type != x$file_type) {
+    wrn <- sprintf(
+      "You specified a file_type argument ('%s') that is different from the file_type of x ('%s').",
+      file_type,
+      x$file_type
+    )
+    warning(wrn)
+  }
   x$metadata <- fix_metadata(x$metadata, pkg = pkg, file_type = file_type, ..., .dots = .dots)
   x
 }
