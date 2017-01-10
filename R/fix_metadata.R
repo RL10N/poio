@@ -65,12 +65,12 @@ fix_metadata <- function(x, pkg = ".", ..., .dots = list())
 
 #' @rdname fix_metadata
 #' @export
-fix_metadata.po <- function(x, pkg = ".", clone = TRUE, ..., .dots = list())
+fix_metadata.po <- function(x, pkg = ".", clone = TRUE, file_type = x$file_type, ..., .dots = list())
 {
   if(clone) {
     x <- x$clone()
   }
-  x$metadata <- fix_metadata(x$metadata, pkg = pkg, file_type = x$file_type, ..., .dots = .dots)
+  x$metadata <- fix_metadata(x$metadata, pkg = pkg, file_type = file_type, ..., .dots = .dots)
   x
 }
 
