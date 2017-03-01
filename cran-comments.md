@@ -1,6 +1,7 @@
 ## Release Summary
 
-This release reworks the PO class to be based upon R6, and provides some minor feature enhancements and bug fixes.
+This release has a single new feature, allowing users to override metadata in 
+fix_metadata().
 
 ## Test Environments
 
@@ -16,4 +17,4 @@ R-hub has a NOTE that it found some marked UTF-8 strings. These are country name
 
 ## Downstream dependencies
 
-None yet.
+msgtools modified to work with new version.
