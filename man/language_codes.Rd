@@ -2,8 +2,8 @@
 % Please edit documentation in R/language_codes-dataset.R
 \docType{data}
 \name{language_codes}
-\alias{ALLOWED_LANGUAGE_REGEX}
 \alias{language_codes}
+\alias{ALLOWED_LANGUAGE_REGEX}
 \title{Language codes supported by GNU gettext}
 \format{\code{language_codes} is a list with two character vector elements.
 \describe{
@@ -52,4 +52,3 @@ webpages:
 \url{https://www.gnu.org/software/gettext/manual/html_node/Country-Codes.html#Country-Codes}
 }
 \keyword{datasets}
-

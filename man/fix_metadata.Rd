@@ -2,8 +2,8 @@
 % Please edit documentation in R/fix_metadata.R
 \name{fix_metadata}
 \alias{fix_metadata}
-\alias{fix_metadata.data.frame}
 \alias{fix_metadata.po}
+\alias{fix_metadata.data.frame}
 \title{Fix metadata in a PO object}
 \usage{
 fix_metadata(x, pkg = ".", ..., .dots = list())
@@ -85,4 +85,3 @@ pot_fixed2 <- fix_metadata(
 pot$metadata
 pot_fixed$metadata
 }
-

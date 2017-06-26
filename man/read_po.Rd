@@ -25,4 +25,3 @@ pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
 \seealso{
 \code{\link[tools]{xgettext}}
 }
-

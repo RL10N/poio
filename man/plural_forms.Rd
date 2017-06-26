@@ -35,4 +35,3 @@ found in the \code{\link[ISOcodes]{ISO_639_2}} help page, or online at
 \url{http://www.loc.gov/standards/iso639-2/php/code_list.php}
 }
 \keyword{datasets}
-

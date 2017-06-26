@@ -74,4 +74,3 @@ and \code{msgctxt} fields.
 Much of the logic for this function was determined from reading
 \url{http://pology.nedohodnik.net/doc/user/en_US/ch-poformat.html}
 }
-

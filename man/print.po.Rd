@@ -28,4 +28,3 @@ print(pot, width = Inf)
 \seealso{
 \code{\link{summary.po}}
 }
-

@@ -27,4 +27,3 @@ POT files are not language-specific and don't have a "Plural-Forms"
   metadata element. By convention, they are considered to have 2 plural
   forms, since that is how many pulral forms there are in English.
 }
-

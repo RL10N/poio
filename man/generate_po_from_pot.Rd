@@ -53,4 +53,3 @@ two_pos$German$metadata
 # have length 6, since Arabic has 6 plural forms
 two_pos$Qatari_Arabic$countable$msgstr
 }
-

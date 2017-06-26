@@ -8,14 +8,13 @@
 \description{
 Read and write PO and POT files, for package translations.
 }
-\author{
-Richard Cotton
-}
 \references{
 \href{https://www.gnu.org/software/gettext/manual/gettext.html}{GNU gettext Manual}
 }
 \seealso{
 \code{\link{read_po}}, \code{\link{write_po}}
 }
+\author{
+Richard Cotton
+}
 \keyword{package}
-

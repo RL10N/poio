@@ -26,4 +26,3 @@ summary(pot <- read_po(pot_file))
 \seealso{
 \code{\link{print.po}}
 }
-
