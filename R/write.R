@@ -45,7 +45,8 @@ write_po.po <- function(po, po_file = NULL, ...)
   # stri_write_lines is faster, but doesn't support writing to text connections
   if(inherits(po_file, "connection"))
   {
-    writeLines(lines, po_file)
+    # encodeString() in case \n inside msgs
+    writeLines(encodeString(lines), po_file)
   } else
   {
     stri_write_lines(lines, po_file)
