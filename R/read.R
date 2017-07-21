@@ -35,6 +35,33 @@ match_and_extract <- function(x, rx, drop = TRUE)
     extract(!is.na(.[, 1L]), -1L, drop = drop)
 }
 
+empty_direct_msgs <- function() {
+  data_frame(
+    msgid                     = character(),
+    msgstr                    = character(),
+    is_obsolete               = logical(),
+    msgctxt                   = list(),
+    translator_comments       = list(),
+    source_reference_comments = list(),
+    flags_comments            = list(),
+    previous_string_comments  = list()
+  )
+}
+
+empty_countable_msgs <- function() {
+  data_frame(
+    msgid                     = character(),
+    msgid_plural              = character(),
+    msgstr                    = list(),
+    is_obsolete               = logical(),
+    msgctxt                   = list(),
+    translator_comments       = list(),
+    source_reference_comments = list(),
+    flags_comments            = list(),
+    previous_string_comments  = list()
+  )
+}
+
 #' Read PO and POT files
 #'
 #' Reads .PO and .POT translation files.
@@ -70,6 +97,7 @@ read_po <- function(po_file)
 {
   assert_is_a_string(po_file)
   assert_all_are_existing_files(po_file)
+  warn_if_not_po_file(po_file)
   lines <- stri_read_lines(po_file, "UTF-8")
 
   base_file_name <- basename(po_file)
@@ -122,27 +150,8 @@ read_po <- function(po_file)
   # just returns list() otherwise.
   if(is_empty(line_groups))
   {
-    msgs_direct <- data_frame(
-      msgid  = character(),
-      msgstr = character(),
-      is_obsolete = logical(),
-      msgctxt = list(),
-      translator_comments = list(),
-      source_reference_comments = list(),
-      flags_comments = list(),
-      previous_string_comments = list()
-    )
-    msgs_countable <- data_frame(
-      msgid         = character(),
-      msgid_plural  = character(),
-      msgstr        = list(),
-      is_obsolete = logical(),
-      msgctxt = list(),
-      translator_comments = list(),
-      source_reference_comments = list(),
-      flags_comments = list(),
-      previous_string_comments = list()
-    )
+    msgs_direct <- empty_direct_msgs()
+    msgs_countable <- empty_countable_msgs()
   } else # lines groups is not empty
   {
     all_msgs <- line_groups %>%
@@ -224,22 +233,30 @@ read_po <- function(po_file)
           x$msg_type == "direct"
         }
       )
-    msgs_direct <- all_msgs[is_direct] %>%
-      lapply(
-        function(x)
-        {
-          x$msgs
-        }
-      ) %>%
-      bind_rows()
-    msgs_countable <- all_msgs[!is_direct] %>%
-      lapply(
-        function(x)
-        {
-          x$msgs
-        }
-      ) %>%
-      bind_rows()
+    msgs_direct <- if(any(is_direct)) {
+      all_msgs[is_direct] %>%
+        lapply(
+          function(x)
+          {
+            x$msgs
+          }
+        ) %>%
+        bind_rows()
+    } else {
+      empty_direct_msgs()
+    }
+    msgs_countable <- if(any(!is_direct)) {
+      all_msgs[!is_direct] %>%
+        lapply(
+          function(x)
+          {
+            x$msgs
+          }
+        ) %>%
+        bind_rows()
+    } else {
+      empty_countable_msgs()
+    }
   }
 
   po(
@@ -250,4 +267,16 @@ read_po <- function(po_file)
     direct = msgs_direct,
     countable = msgs_countable
   )
+}
+
+is_po_file <- function(po_file)
+{
+  stri_detect_regex(po_file, "\\.pot?$")
+}
+
+warn_if_not_po_file <- function(po_file)
+{
+  if(!is_po_file(po_file)) {
+    warning("The file extension is neither 'po' nor 'pot'.")
+  }
 }
