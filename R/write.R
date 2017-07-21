@@ -49,7 +49,7 @@ write_po.po <- function(po, po_file = NULL, ...)
     writeLines(encodeString(lines), po_file)
   } else
   {
-    stri_write_lines(lines, po_file)
+    stri_write_lines(encodeString(lines), po_file)
   }
   invisible(po)
 }
