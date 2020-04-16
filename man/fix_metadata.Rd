@@ -8,11 +8,16 @@
 \usage{
 fix_metadata(x, pkg = ".", ..., .dots = list())
 
-\method{fix_metadata}{po}(x, pkg = ".", clone = TRUE,
-  file_type = x$file_type, ..., .dots = list())
+\method{fix_metadata}{po}(
+  x,
+  pkg = ".",
+  clone = TRUE,
+  file_type = x$file_type,
+  ...,
+  .dots = list()
+)
 
-\method{fix_metadata}{data.frame}(x, pkg = ".", file_type, ...,
-  .dots = list())
+\method{fix_metadata}{data.frame}(x, pkg = ".", file_type, ..., .dots = list())
 }
 \arguments{
 \item{x}{An object of class \code{po}, or the data frame from the

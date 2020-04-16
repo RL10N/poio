@@ -3,7 +3,6 @@
 \docType{package}
 \name{poio}
 \alias{poio}
-\alias{poio-package}
 \title{Input/Output Functionality for \dQuote{PO} and \dQuote{POT} Message Translation Files}
 \description{
 Read and write PO and POT files, for package translations.

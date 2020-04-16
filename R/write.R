@@ -68,11 +68,11 @@ metadata_to_lines <- function(metadata)
   {
     return(character())
   }
-  with(metadata, paste0('"', name, ': ', value, '\\n"'))
+  with(metadata, paste0('"', name, ': ', value, '\n"'))
 }
 
 #' @importFrom dplyr rowwise
-#' @importFrom dplyr transmute_
+#' @importFrom dplyr transmute
 #' @importFrom magrittr %>%
 direct_msgs_to_lines <- function(direct)
 {
@@ -82,8 +82,8 @@ direct_msgs_to_lines <- function(direct)
   }
   direct %>%
     rowwise() %>%
-    transmute_(
-      output = ~ list(
+    transmute(
+      output = list(
         c(
           paste0(
             rep_len('# ', length(translator_comments)),
@@ -116,7 +116,7 @@ direct_msgs_to_lines <- function(direct)
 }
 
 #' @importFrom dplyr rowwise
-#' @importFrom dplyr transmute_
+#' @importFrom dplyr transmute
 #' @importFrom magrittr %>%
 countable_msgs_to_lines <- function(countable, n_plurals)
 {
@@ -126,8 +126,8 @@ countable_msgs_to_lines <- function(countable, n_plurals)
   }
   countable %>%
     rowwise() %>%
-    transmute_(
-      output = ~ list(
+    transmute(
+      output = list(
         c(
           paste0(
             rep_len('# ', length(translator_comments)),
@@ -166,7 +166,7 @@ countable_msgs_to_lines <- function(countable, n_plurals)
     unlist(use.names = FALSE)
 }
 
-#' @importFrom dplyr filter_
+#' @importFrom dplyr filter
 #' @importFrom magrittr %>%
 #' @importFrom magrittr extract2
 #' @importFrom stringi stri_extract_first_regex
@@ -184,7 +184,7 @@ generate_po_file_name <- function(po)
   } else
   {
     lang <- po$metadata %>%
-      filter_(~ name == "Language") %>%
+      filter(name == "Language") %>%
       extract2("value")
     file_ext <- ".po"
   }

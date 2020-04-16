@@ -4,7 +4,8 @@
 \name{plural_forms}
 \alias{plural_forms}
 \title{Plural Forms Data}
-\format{\code{plural_forms} is a data frame with 3 character columns and 1 numeric column and 142 rows:
+\format{
+\code{plural_forms} is a data frame with 3 character columns and 1 numeric column and 142 rows:
 \describe{
 \item{ISO}{The ISO 639 specification of the language.  Usually this is the
 two letter ISO 639-1 name, but some three letter ISO 639-2 names are also
@@ -13,7 +14,8 @@ included, for cases where no two letter name exists.}
 \item{PluralFormHeader}{The GNU gettext specification of how plural forms
 are specified in the language.}
 \item{nplurals}{A numeric value specifying the number of plural forms.}
-}}
+}
+}
 \usage{
 data(plural_forms)
 }
