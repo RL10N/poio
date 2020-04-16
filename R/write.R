@@ -74,6 +74,7 @@ metadata_to_lines <- function(metadata)
 #' @importFrom dplyr rowwise
 #' @importFrom dplyr transmute
 #' @importFrom magrittr %>%
+#' @importFrom dplyr .data
 direct_msgs_to_lines <- function(direct)
 {
   if(nrow(direct) == 0L)
@@ -86,28 +87,28 @@ direct_msgs_to_lines <- function(direct)
       output = list(
         c(
           paste0(
-            rep_len('# ', length(translator_comments)),
-            translator_comments
+            rep_len('# ', length(.data$translator_comments)),
+            .data$translator_comments
           ),
           paste0(
-            rep_len('#: ', length(source_reference_comments)),
-            source_reference_comments
+            rep_len('#: ', length(.data$source_reference_comments)),
+            .data$source_reference_comments
           ),
           paste0(
-            rep_len('#, ', length(flags_comments)),
+            rep_len('#, ', length(.data$flags_comments)),
             flags_comments
           ),
           paste0(
-            rep_len('#| ', length(previous_string_comments)),
-            previous_string_comments
+            rep_len('#| ', length(.data$previous_string_comments)),
+            .data$previous_string_comments
           ),
           paste0(
-            rep_len('msgctxt "', length(msgctxt)),
-            msgctxt,
-            rep_len('"', length(msgctxt))
+            rep_len('msgctxt "', length(.data$msgctxt)),
+            .data$msgctxt,
+            rep_len('"', length(.data$msgctxt))
           ),
-          paste0(if(is_obsolete) '#~ ', 'msgid "', msgid, '"'),
-          paste0(if(is_obsolete) '#~ ', 'msgstr "', msgstr, '"'),
+          paste0(if(is_obsolete) '#~ ', 'msgid "', .data$msgid, '"'),
+          paste0(if(is_obsolete) '#~ ', 'msgstr "', .data$msgstr, '"'),
           ''
         )
       )
@@ -118,6 +119,7 @@ direct_msgs_to_lines <- function(direct)
 #' @importFrom dplyr rowwise
 #' @importFrom dplyr transmute
 #' @importFrom magrittr %>%
+#' @importFrom dplyr .data
 countable_msgs_to_lines <- function(countable, n_plurals)
 {
   if(nrow(countable) == 0L)
@@ -130,34 +132,34 @@ countable_msgs_to_lines <- function(countable, n_plurals)
       output = list(
         c(
           paste0(
-            rep_len('# ', length(translator_comments)),
-            translator_comments
+            rep_len('# ', length(.data$translator_comments)),
+            .data$translator_comments
           ),
           paste0(
-            rep_len('#: ', length(source_reference_comments)),
-            source_reference_comments
+            rep_len('#: ', length(.data$source_reference_comments)),
+            .data$source_reference_comments
           ),
           paste0(
-            rep_len('#, ', length(flags_comments)),
-            flags_comments
+            rep_len('#, ', length(.data$flags_comments)),
+            .data$flags_comments
           ),
           paste0(
-            rep_len('#| ', length(previous_string_comments)),
-            previous_string_comments
+            rep_len('#| ', length(.data$previous_string_comments)),
+            .data$previous_string_comments
           ),
           paste0(
-            rep_len('msgctxt "', length(msgctxt)),
-            msgctxt,
-            rep_len('"', length(msgctxt))
+            rep_len('msgctxt "', length(.data$msgctxt)),
+            .data$msgctxt,
+            rep_len('"', length(.data$msgctxt))
           ),
-          paste0(if(is_obsolete) '#~ ', 'msgid "', msgid, '"'),
+          paste0(if(.data$is_obsolete) '#~ ', 'msgid "', .data$msgid, '"'),
           paste0(
-            if(is_obsolete) '#~ ', 'msgid_plural "',
-            msgid_plural, '"'
+            if(.data$is_obsolete) '#~ ', 'msgid_plural "',
+            .data$msgid_plural, '"'
           ),
           paste0(
-            if(is_obsolete) '#~ ', "msgstr[",
-            seq(0L, n_plurals - 1L), '] "', msgstr, '"'
+            if(.data$is_obsolete) '#~ ', "msgstr[",
+            seq(0L, n_plurals - 1L), '] "', .data$msgstr, '"'
           ),
           ''
         )
@@ -177,7 +179,7 @@ generate_po_file_name <- function(po)
   {
     # Use pkg name instead of language
     lang <- po$metadata %>%
-      filter_(~ name == "Project-Id-Version") %>%
+      filter_(~ .data$name == "Project-Id-Version") %>%
       extract2("value") %>%
       stri_extract_first_regex("^[a-zA-Z0-9._]+")
     file_ext <- ".pot"
