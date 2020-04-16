@@ -8,7 +8,7 @@ test_that(
       source_type = "r",
       file_type   = "pot",
       initial_comments = character(),
-      metadata    = tibble::data_frame(
+      metadata    = tibble::tibble(
         name = c(
           "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
           "PO-Revision-Date", "Last-Translator", "Language-Team",
@@ -21,7 +21,7 @@ test_that(
         )
       ),
       direct = poio:::append_key(
-        tibble::data_frame(
+        tibble::tibble(
           msgid                     = character(),
           msgstr                    = character(),
           is_obsolete               = logical(),
@@ -33,7 +33,7 @@ test_that(
         )
       ),
       countable = poio:::append_key(
-        tibble::data_frame(
+        tibble::tibble(
           msgid                     = character(),
           msgid_plural              = character(),
           msgstr                    = list(),
@@ -60,7 +60,7 @@ test_that(
       source_type = "r",
       file_type   = "pot",
       initial_comments = character(),
-      metadata    = tibble::data_frame(
+      metadata    = tibble::tibble(
         name = c(
           "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
           "PO-Revision-Date", "Last-Translator", "Language-Team",
@@ -74,7 +74,7 @@ test_that(
         )
       ),
       direct = poio:::append_key(
-        tibble::data_frame(
+        tibble::tibble(
           msgid                     = character(),
           msgstr                    = character(),
           is_obsolete               = logical(),
@@ -86,7 +86,7 @@ test_that(
         )
       ),
       countable = poio:::append_key(
-        tibble::data_frame(
+        tibble::tibble(
           msgid                     = character(),
           msgid_plural              = character(),
           msgstr                    = list(),
@@ -119,7 +119,7 @@ test_that(
       source_type = "r",
       file_type   = "pot",
       initial_comments = character(),
-      metadata    = tibble::data_frame(
+      metadata    = tibble::tibble(
         name = c(
           "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
           "PO-Revision-Date", "Last-Translator", "Language-Team",
@@ -133,7 +133,7 @@ test_that(
         )
       ),
       direct = poio:::append_key(
-        tibble::data_frame(
+        tibble::tibble(
           msgid                     = character(),
           msgstr                    = character(),
           is_obsolete               = logical(),
@@ -145,7 +145,7 @@ test_that(
         )
       ),
       countable = poio:::append_key(
-        tibble::data_frame(
+        tibble::tibble(
           msgid                     = character(),
           msgid_plural              = character(),
           msgstr                    = list(),
@@ -196,7 +196,7 @@ test_that(
       source_type = "r",
       file_type   = "po",
       initial_comments = character(),
-      metadata    = tibble::data_frame(
+      metadata    = tibble::tibble(
         name = c(
           "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
           "PO-Revision-Date", "Last-Translator", "Language-Team",
@@ -210,7 +210,7 @@ test_that(
           "ar", "nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5);"
         )
       ),
-      direct = tibble::data_frame(
+      direct = tibble::tibble(
         msgid  = character(),
         msgstr = character(),
         is_obsolete = logical(),
@@ -220,7 +220,7 @@ test_that(
         flags_comments = list(),
         previous_string_comments = list()
       ),
-      countable = tibble::data_frame(
+      countable = tibble::tibble(
         msgid         = character(),
         msgid_plural  = character(),
         msgstr        = list(),

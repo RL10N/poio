@@ -36,7 +36,7 @@ match_and_extract <- function(x, rx, drop = TRUE)
 }
 
 empty_direct_msgs <- function() {
-  data_frame(
+  tibble(
     msgid                     = character(),
     msgstr                    = character(),
     is_obsolete               = logical(),
@@ -49,7 +49,7 @@ empty_direct_msgs <- function() {
 }
 
 empty_countable_msgs <- function() {
-  data_frame(
+  tibble(
     msgid                     = character(),
     msgid_plural              = character(),
     msgstr                    = list(),
@@ -90,7 +90,7 @@ empty_countable_msgs <- function() {
 #' @importFrom stringi stri_read_lines
 #' @importFrom stringi stri_detect_regex
 #' @importFrom stringi stri_match_first_regex
-#' @importFrom tibble data_frame
+#' @importFrom tibble tibble
 #' @importFrom tools file_ext
 #' @export
 read_po <- function(po_file)
@@ -110,7 +110,7 @@ read_po <- function(po_file)
   metadata_lines <- lines[metadata_line_index]
   metadata <- metadata_lines %>%
     stri_match_first_regex(RX$metadata)
-  metadata <- data_frame(
+  metadata <- tibble(
     name  = metadata[, 2],
     value = metadata[, 3]
   )
@@ -172,7 +172,7 @@ read_po <- function(po_file)
         is_obsolete <- !is.na(msgid_match[, 1L])
         msgid <- msgid_match[, 2L]
 
-        comments <- data_frame(
+        comments <- tibble(
           translator_comments = list(
             match_and_extract(lines, RX$translator_comment)
           ),
@@ -193,7 +193,7 @@ read_po <- function(po_file)
           msgstr <- match_and_extract(lines, RX$msgstr_direct)
           list(
             msg_type = "direct",
-            msgs = data_frame(
+            msgs = tibble(
               msgid       = msgid,
               msgstr      = msgstr,
               is_obsolete = is_obsolete,
@@ -214,7 +214,7 @@ read_po <- function(po_file)
 
           list(
             msg_type = "countable",
-            msgs = data_frame(
+            msgs = tibble(
               msgid        = msgid,
               msgid_plural = msgid_plural,
               msgstr       = msgstr,

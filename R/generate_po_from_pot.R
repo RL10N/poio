@@ -58,7 +58,7 @@ generate_po_from_pot.po <- function(x, lang, ...)
   } else
   {
     x$metadata <- x$metadata %>%
-      bind_rows(data_frame(name = "Language", value = lang))
+      bind_rows(tibble(name = "Language", value = lang))
   }
   if("Plural-Forms" %in% x$metadata$name)
   {
@@ -66,7 +66,7 @@ generate_po_from_pot.po <- function(x, lang, ...)
   } else
   {
     x$metadata <- x$metadata %>%
-      bind_rows(data_frame(name = "Plural-Forms", value = plural_forms))
+      bind_rows(tibble(name = "Plural-Forms", value = plural_forms))
   }
 
   # For countable messages, change the number of plural forms for the

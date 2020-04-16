@@ -119,7 +119,7 @@ fix_metadata.data.frame <- function(x, pkg = ".", file_type, ..., .dots = list()
       warning("No Language metadata field found. Adding an empty field; please manually set the value.")
       x <- x %>%
         bind_rows(
-          data_frame(name = "Language", value = NA_character_)
+          tibble(name = "Language", value = NA_character_)
         )
       return(x)
     }

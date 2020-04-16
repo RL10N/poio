@@ -71,8 +71,8 @@ po_factory <- R6::R6Class(
     ..source_type = "r",
     ..file_type = "pot",
     ..initial_comments = character(),
-    ..metadata = tibble::data_frame(name = character(), value = character()),
-    ..direct = tibble::data_frame(
+    ..metadata = tibble::tibble(name = character(), value = character()),
+    ..direct = tibble::tibble(
       msgid  = character(),
       msgstr = character(),
       is_obsolete = logical(),
@@ -82,7 +82,7 @@ po_factory <- R6::R6Class(
       flags_comments = list(),
       previous_string_comments = list()
     ),
-    ..countable = tibble::data_frame(
+    ..countable = tibble::tibble(
       msgid         = character(),
       msgid_plural  = character(),
       msgstr        = list(),

@@ -12,7 +12,7 @@ test_that(
         "Other comment types aren't useful here, and should be ignored.",
         "Like the \"fuzzy\" flags comment below."
       ),
-      metadata    = tibble::data_frame(
+      metadata    = tibble::tibble(
         name = c(
           "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
           "PO-Revision-Date", "Last-Translator", "Language-Team",
@@ -24,7 +24,7 @@ test_that(
           "1.0", "text/plain; charset=CHARSET", "8bit"
         )
       ),
-      direct = tibble::data_frame(
+      direct = tibble::tibble(
         msgid  = c(
           "I got my first real six-string",
           "Bought it at the %f-and-dime",
@@ -76,7 +76,7 @@ test_that(
           character()
         )
       ),
-      countable = tibble::data_frame(
+      countable = tibble::tibble(
         msgid         = c("Me and %d guy from school", "I should've known we'd never get far" ),
         msgid_plural  = c("Me and %d guys from school", "I should've known we'd never get fars" ),
         msgstr        = list(
@@ -124,7 +124,7 @@ test_that(
         "Other comment types aren't useful here, and should be ignored.",
         "Like the \"fuzzy\" flags comment below."
       ),
-      metadata    = tibble::data_frame(
+      metadata    = tibble::tibble(
         name = c(
           "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
           "PO-Revision-Date", "Last-Translator", "Language-Team",
@@ -137,7 +137,7 @@ test_that(
           "1.0", "text/plain; charset=UTF-8", "8bit"
         )
       ),
-      direct = tibble::data_frame(
+      direct = tibble::tibble(
         msgid  = c(
           "I got my first real six-string",
           "Bought it at the %f-and-dime",
@@ -189,7 +189,7 @@ test_that(
           character()
         )
       ),
-      countable = tibble::data_frame(
+      countable = tibble::tibble(
         msgid         = c("Me and %d guy from school", "I should've known we'd never get far" ),
         msgid_plural  = c("Me and %d guys from school", "I should've known we'd never get fars" ),
         msgstr        = list(
@@ -268,7 +268,7 @@ test_that(
         "Other comment types aren't useful here, and should be ignored.",
         "Like the \"fuzzy\" flags comment below."
       ),
-      metadata    = tibble::data_frame(
+      metadata    = tibble::tibble(
         name = c(
           "Project-Id-Version", "Report-Msgid-Bugs-To", "POT-Creation-Date",
           "PO-Revision-Date", "Last-Translator", "Language-Team",
@@ -282,7 +282,7 @@ test_that(
           "ru", "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
         )
       ),
-      direct = tibble::data_frame(
+      direct = tibble::tibble(
         msgid  = c(
           "I got my first real six-string",
           "Bought it at the %f-and-dime",
@@ -334,7 +334,7 @@ test_that(
           character()
         )
       ),
-      countable = tibble::data_frame(
+      countable = tibble::tibble(
         msgid         = c("Me and %d guy from school", "I should've known we'd never get far" ),
         msgid_plural  = c("Me and %d guys from school", "I should've known we'd never get fars" ),
         msgstr        = list(
