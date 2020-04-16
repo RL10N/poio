@@ -96,7 +96,7 @@ direct_msgs_to_lines <- function(direct)
           ),
           paste0(
             rep_len('#, ', length(.data$flags_comments)),
-            flags_comments
+            .data$flags_comments
           ),
           paste0(
             rep_len('#| ', length(.data$previous_string_comments)),
@@ -107,8 +107,8 @@ direct_msgs_to_lines <- function(direct)
             .data$msgctxt,
             rep_len('"', length(.data$msgctxt))
           ),
-          paste0(if(is_obsolete) '#~ ', 'msgid "', .data$msgid, '"'),
-          paste0(if(is_obsolete) '#~ ', 'msgstr "', .data$msgstr, '"'),
+          paste0(if(.data$is_obsolete) '#~ ', 'msgid "', .data$msgid, '"'),
+          paste0(if(.data$is_obsolete) '#~ ', 'msgstr "', .data$msgstr, '"'),
           ''
         )
       )
@@ -172,6 +172,7 @@ countable_msgs_to_lines <- function(countable, n_plurals)
 #' @importFrom magrittr %>%
 #' @importFrom magrittr extract2
 #' @importFrom stringi stri_extract_first_regex
+#' @importFrom dplyr .data
 generate_po_file_name <- function(po)
 {
   # POT files don't have a Language element in the metadata, but PO files do
@@ -186,7 +187,7 @@ generate_po_file_name <- function(po)
   } else
   {
     lang <- po$metadata %>%
-      filter(name == "Language") %>%
+      filter(.data$name == "Language") %>%
       extract2("value")
     file_ext <- ".po"
   }
