@@ -31,19 +31,19 @@ summary.po <- function(object, ...)
   )
   cat("\nSelected Metadata:\n")
   object$metadata %>%
-    filter_(~ name %in% c("Project-Id-Version", "PO-Revision-Date", "Last-Translator")) %>%
+    filter(.data$name %in% c("Project-Id-Version", "PO-Revision-Date", "Last-Translator")) %>%
     as.data.frame() %>%
     print(...)
   cat("\nNon-obsolete Direct Translations:\n")
   object$direct %>%
-    filter_(~ !is_obsolete) %>%
-    select_(~ msgid, ~ msgstr) %>%
+    filter(!.data$is_obsolete) %>%
+    select(.data$msgid, .data$msgstr) %>%
     as.data.frame() %>%
     print(...)
   cat("\nNon-obsolete Countable Translations:\n")
   object$countable %>%
-    filter_(~ !is_obsolete) %>%
-    select_(~ msgid, ~ msgid_plural, ~ msgstr) %>%
+    filter(!.data$is_obsolete) %>%
+    select(.data$msgid, .data$msgid_plural, .data$msgstr) %>%
     as.data.frame() %>%
     print(...)
   invisible(object)

@@ -59,8 +59,8 @@ language_codes <- lapply(
 
 # Merge 2-letter lang codes
 iso639_1 <- ISO_639_2 %>%
-  filter_(~ !is.na(Alpha_2)) %>%
-  select_(~ Alpha_2, ~ Name)
+  filter(!is.na(.data$Alpha_2)) %>%
+  select(.data$Alpha_2, .data$Name)
 
 # Fix UTF-8 country names
 iso639_1$Name[stringi::stri_detect_fixed(iso639_1$Name, "Bokm")] <- "Bokm\u00e5l, Norwegian; Norwegian Bokm\u00e5l"
@@ -88,7 +88,7 @@ language_codes$usual_lang <- with(usual_lang, setNames(Alpha_2, Name))
 # and all(language_codes$rare_lang %in% ISO_639_2$Alpha_3_B)
 # so it doesn't matter
 iso639_2 <- ISO_639_2 %>%
-  select_(~ Alpha_3_B, ~ Name)
+  select(.data$Alpha_3_B, .data$Name)
 
 rare_lang <- data.frame(
   Alpha_3_B = language_codes$rare_lang,
@@ -101,7 +101,7 @@ language_codes$rare_lang <- with(rare_lang, setNames(Alpha_3_B, Name))
 
 # Just take country codes directly from ISO dataset
 iso3166_1 <- ISO_3166_1 %>%
-  select_(~ Alpha_2, ~ Name)
+  select(.data$Alpha_2, .data$Name)
 # Fix UTF-8 country names
 iso3166_1$Name[stringi::stri_detect_fixed(iso3166_1$Name, "\u00c5land Islands")] <- "\u00c5land Islands"
 iso3166_1$Name[stringi::stri_detect_fixed(iso3166_1$Name, "te d'Ivoire")] <- "C\u00f4te d'Ivoire"

@@ -74,19 +74,22 @@ empty_countable_msgs <- function() {
 #' # read_po is used for both po and pot files
 #' pot_file <- system.file("extdata/R-summerof69.pot", package = "poio")
 #' (pot <- read_po(pot_file))
-#' @importFrom assertive.base bapply
 #' @importFrom assertive.properties is_empty
 #' @importFrom assertive.properties is_non_empty
 #' @importFrom assertive.properties is_scalar
 #' @importFrom assertive.types assert_is_a_string
 #' @importFrom assertive.files assert_all_are_existing_files
-#' @importFrom dplyr filter_
-#' @importFrom dplyr select_
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
 #' @importFrom dplyr bind_cols
 #' @importFrom dplyr bind_rows
 #' @importFrom magrittr %>%
 #' @importFrom magrittr extract
 #' @importFrom magrittr extract2
+#' @importFrom purrr map
+#' @importFrom purrr map_df
+#' @importFrom purrr map_lgl
+#' @importFrom purrr keep
 #' @importFrom stringi stri_read_lines
 #' @importFrom stringi stri_detect_regex
 #' @importFrom stringi stri_match_first_regex
@@ -108,12 +111,7 @@ read_po <- function(po_file)
 
   metadata_line_index <- which(stri_detect_regex(lines, RX$metadata))
   metadata_lines <- lines[metadata_line_index]
-  metadata <- metadata_lines %>%
-    stri_match_first_regex(RX$metadata)
-  metadata <- tibble(
-    name  = metadata[, 2],
-    value = metadata[, 3]
-  )
+  metadata <- extract_metadata(metadata_lines)
 
   # Translator comments before metadata
   first_metadata_line <- metadata_line_index[1]
@@ -130,21 +128,8 @@ read_po <- function(po_file)
   last_metadata_line <- metadata_line_index[length(metadata_line_index)]
   lines <- lines[-seq_len(last_metadata_line)]
 
-  # Split on blank/whitespace lines
-  blank_lines <- cumsum(stri_detect_regex(lines, RX$blank))
-  line_groups <- split(lines, blank_lines)
-
-  # And remove those empty lines
-  line_groups <- line_groups %>%
-    lapply(
-      function(x)
-        x[!stri_detect_regex(x, RX$blank)]
-    )
-
-  # Remove empty groups
-  line_groups <- line_groups[
-    bapply(line_groups, is_non_empty)
-    ]
+  # Split on blank lines
+  line_groups <- split_into_line_groups(lines)
 
   # Special handling of empty case need because lapply
   # just returns list() otherwise.
@@ -154,106 +139,18 @@ read_po <- function(po_file)
     msgs_countable <- empty_countable_msgs()
   } else # lines groups is not empty
   {
-    all_msgs <- line_groups %>%
-      lapply(
-      function(lines)
-      {
-        msgid_match <- match_and_extract(lines, RX$msgid, drop = FALSE)
-        # Where there is an obsolete comment, no msgids are possible
-        # Currently the implementation allows for zero msgids under all
-        # circumstances which is possibly too lenient, but the spec is unclear.
-        if(nrow(msgid_match) != 1L)
-        {
-          stop(
-            "There should be exactly one msgid found in each block. Are you missing a blank line?\nThe offending lines are:\n",
-            paste(lines, collapse = "\n")
-          )
-        }
-        is_obsolete <- !is.na(msgid_match[, 1L])
-        msgid <- msgid_match[, 2L]
-
-        comments <- tibble(
-          translator_comments = list(
-            match_and_extract(lines, RX$translator_comment)
-          ),
-          source_reference_comments = list(
-            match_and_extract(lines, RX$source_reference_comment)
-          ),
-          flags_comments = list(
-            match_and_extract(lines, RX$flags_comment)
-          ),
-          previous_string_comments = list(
-            match_and_extract(lines, RX$previous_string_comment)
-          )
-        )
-        msgctxt <- list(match_and_extract(lines, RX$msgctxt))
-        msgid_plural <- match_and_extract(lines, RX$msgid_plural)
-        if(is_empty(msgid_plural)) # direct msg
-        {
-          msgstr <- match_and_extract(lines, RX$msgstr_direct)
-          list(
-            msg_type = "direct",
-            msgs = tibble(
-              msgid       = msgid,
-              msgstr      = msgstr,
-              is_obsolete = is_obsolete,
-              msgctxt     = msgctxt
-            ) %>%
-              bind_cols(comments)
-          )
-        } else # countable msg
-        {
-          msgstr_and_id <- match_and_extract(lines, RX$msgstr_countable)
-          # In case of weird file with, e.g, msgstr[1] before msgstr[0], reorder
-          o <- order(msgstr_and_id[, 1L])
-          msgstr <- msgstr_and_id[o, 2L]
-          # If badly formed with wrong number of plurals, add empty translations
-          # up to no. of plural forms suggested by metadata (or ignore extras).
-          length(msgstr) <- n_plural_forms
-          msgstr <- list(msgstr)
-
-          list(
-            msg_type = "countable",
-            msgs = tibble(
-              msgid        = msgid,
-              msgid_plural = msgid_plural,
-              msgstr       = msgstr,
-              is_obsolete  = is_obsolete,
-              msgctxt      = msgctxt
-            ) %>%
-              bind_cols(comments)
-          )
-        }
-      }
-    )
+    all_msgs <- lapply(line_groups, parse_line_group, n_plural_forms = n_plural_forms)
     is_direct <- all_msgs %>%
-      bapply(
-        function(x)
-        {
-          x$msg_type == "direct"
-        }
-      )
+      map_lgl(~ .$msg_type == "direct")
     msgs_direct <- if(any(is_direct)) {
       all_msgs[is_direct] %>%
-        lapply(
-          function(x)
-          {
-            x$msgs
-          }
-        ) %>%
-        bind_rows()
+        map_df(~ .$msgs)
     } else {
       empty_direct_msgs()
     }
     msgs_countable <- if(any(!is_direct)) {
       all_msgs[!is_direct] %>%
-        lapply(
-          function(x)
-          {
-            x$msgs
-          }
-        ) %>%
-        bind_rows()
+        map_df(~ .$msgs)
     } else {
       empty_countable_msgs()
     }
@@ -278,5 +175,103 @@ warn_if_not_po_file <- function(po_file)
 {
   if(!is_po_file(po_file)) {
     warning("The file extension is neither 'po' nor 'pot'.")
+  }
+}
+
+#' @importFrom stringi stri_match_first_regex
+#' @importFrom tibble tibble
+extract_metadata <- function(metadata_lines) {
+  metadata <- metadata_lines %>%
+    stri_match_first_regex(RX$metadata)
+  tibble(
+    name  = metadata[, 2],
+    value = metadata[, 3]
+  )
+}
+
+#' @importFrom assertive.properties is_non_empty
+#' @importFrom purrr map
+#' @importFrom purrr keep
+#' @importFrom stringi stri_detect_regex
+split_into_line_groups <- function(lines) {
+  # Split on blank lines
+  blank_lines <- cumsum(stri_detect_regex(lines, RX$blank))
+  line_groups <- split(lines, blank_lines)
+
+  line_groups %>%
+    # Remove those empty lines
+    map(~ .[!stri_detect_regex(., RX$blank)]) %>%
+    # Remove empty groups
+    keep(is_non_empty)
+}
+
+#' @importFrom assertive.properties is_empty
+#' @importFrom tibble tibble
+parse_line_group <- function(lines, n_plural_forms)
+{
+  msgid_match <- match_and_extract(lines, RX$msgid, drop = FALSE)
+  # Where there is an obsolete comment, no msgids are possible
+  # Currently the implementation allows for zero msgids under all
+  # circumstances which is possibly too lenient, but the spec is unclear.
+  if(nrow(msgid_match) != 1L)
+  {
+    stop(
+      "There should be exactly one msgid found in each block. Are you missing a blank line?\nThe offending lines are:\n",
+      paste(lines, collapse = "\n")
+    )
+  }
+  is_obsolete <- !is.na(msgid_match[, 1L])
+  msgid <- msgid_match[, 2L]
+
+  comments <- tibble(
+    translator_comments = list(
+      match_and_extract(lines, RX$translator_comment)
+    ),
+    source_reference_comments = list(
+      match_and_extract(lines, RX$source_reference_comment)
+    ),
+    flags_comments = list(
+      match_and_extract(lines, RX$flags_comment)
+    ),
+    previous_string_comments = list(
+      match_and_extract(lines, RX$previous_string_comment)
+    )
+  )
+  msgctxt <- list(match_and_extract(lines, RX$msgctxt))
+  msgid_plural <- match_and_extract(lines, RX$msgid_plural)
+  if(is_empty(msgid_plural)) # direct msg
+  {
+    msgstr <- match_and_extract(lines, RX$msgstr_direct)
+    list(
+      msg_type = "direct",
+      msgs = tibble(
+        msgid       = msgid,
+        msgstr      = msgstr,
+        is_obsolete = is_obsolete,
+        msgctxt     = msgctxt
+      ) %>%
+        bind_cols(comments)
+    )
+  } else # countable msg
+  {
+    msgstr_and_id <- match_and_extract(lines, RX$msgstr_countable)
+    # In case of weird file with, e.g, msgstr[1] before msgstr[0], reorder
+    o <- order(msgstr_and_id[, 1L])
+    msgstr <- msgstr_and_id[o, 2L]
+    # If badly formed with wrong number of plurals, add empty translations
+    # up to no. of plural forms suggested by metadata (or ignore extras).
+    length(msgstr) <- n_plural_forms
+    msgstr <- list(msgstr)
+    list(
+      msg_type = "countable",
+      msgs = tibble(
+        msgid        = msgid,
+        msgid_plural = msgid_plural,
+        msgstr       = msgstr,
+        is_obsolete  = is_obsolete,
+        msgctxt      = msgctxt
+      ) %>%
+        bind_cols(comments)
+    )
   }
 }

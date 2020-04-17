@@ -7,9 +7,9 @@
 #' originated from a PO (language-specific) or POT (master translation) file.
 #' @param initial_comments A character vector of comments added by the
 #' translator.
-#' @param metadata A \code{\link[tibble]{data_frame}} of file metadata with
+#' @param metadata A \code{\link[tibble]{tibble}} of file metadata with
 #' columns "name" and "value".
-#' @param direct A \code{\link[tibble]{data_frame}} of messages with a direct
+#' @param direct A \code{\link[tibble]{tibble}} of messages with a direct
 #' translation, as created by \code{\link[base]{stop}},
 #' \code{\link[base]{warning}}, \code{\link[base]{message}} or
 #' \code{\link[base]{gettext}}; its columns are described below.
@@ -54,7 +54,7 @@
 #' @references Much of the logic for this function was determined from reading
 #' \url{http://pology.nedohodnik.net/doc/user/en_US/ch-poformat.html}
 #' @importFrom R6 R6Class
-#' @importFrom tibble data_frame
+#' @importFrom tibble tibble
 #' @importFrom tibble as_tibble
 #' @importFrom assertive.sets assert_are_set_equal
 #' @importFrom assertive.sets assert_is_superset
@@ -285,16 +285,16 @@ po_factory <- R6::R6Class(
 )
 
 #' @importFrom digest digest
-#' @importFrom dplyr mutate_
+#' @importFrom dplyr mutate
 #' @importFrom magrittr %>%
 append_key <- function(x) {
   # (msgid, msgctxt) pairs ought to be unique, since the whole point of msgctxt
   # is to disambiguate the rare case that there are duplicate msgids
   # xxhash32 chosen because the hash is only 8 letters
   x %>%
-    mutate_(
-      msgkey = ~ vapply(
-        paste(msgid, msgctxt), digest, character(1), algo = "xxhash32"
+    mutate(
+      msgkey = vapply(
+        paste(.data$msgid, .data$msgctxt), digest, character(1), algo = "xxhash32"
       )
     )
 }

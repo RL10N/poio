@@ -30,7 +30,7 @@ test_that(
           "Bought it at the %f-and-dime",
           "Played it till my fingers bled",
           "It was the summer of '%d.",
-          "Had a \\\"band\\\"\" and we tried real hard",
+          "Had a \\\"band\\\" and we tried real hard",
           "Jimmy quit and Jody got married"
         ),
         msgstr = character(6),
@@ -143,7 +143,7 @@ test_that(
           "Bought it at the %f-and-dime",
           "Played it till my fingers bled",
           "It was the summer of '%d.",
-          "Had a \\\"band\\\"\" and we tried real hard",
+          "Had a \\\"band\\\" and we tried real hard",
           "Jimmy quit and Jody got married"
         ),
         msgstr = character(6),
@@ -288,7 +288,7 @@ test_that(
           "Bought it at the %f-and-dime",
           "Played it till my fingers bled",
           "It was the summer of '%d.",
-          "Had a \\\"band\\\"\" and we tried real hard",
+          "Had a \\\"band\\\" and we tried real hard",
           "Jimmy quit and Jody got married"
         ),
         msgstr = character(6),

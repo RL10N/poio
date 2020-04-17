@@ -4,7 +4,7 @@ library(poio)
 # Can't compare po object directly using
 # expect_identical(po1, po2) due to
 # https://github.com/hadley/dplyr/issues/2194
-# testthat also not informative on where differences in data_frames are
+# testthat also not informative on where differences in tibble are
 # so roll custom solution.
 
 expect_po_equal <- function(actual, expected, check_po_revision_date = FALSE) {
@@ -35,7 +35,7 @@ expect_po_equal <- function(actual, expected, check_po_revision_date = FALSE) {
     )
   }
 
-  # Avoid tibble mess by converting data_frames
+  # Avoid tibble mess by converting tibble
   # to data.frames before comparing
   actual_metadata <- as.data.frame(actual$metadata)
   expected_metadata <- as.data.frame(expected$metadata)

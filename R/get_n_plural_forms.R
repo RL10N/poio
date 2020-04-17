@@ -25,8 +25,8 @@ get_n_plural_forms.po <- function(x, ...)
 }
 
 #' @importFrom assertive.properties is_empty
-#' @importFrom dplyr filter_
-#' @importFrom dplyr select_
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
 #' @importFrom magrittr %>%
 #' @importFrom magrittr extract2
 #' @importFrom stringi stri_match_first_regex
@@ -34,8 +34,8 @@ get_n_plural_forms.po <- function(x, ...)
 get_n_plural_forms.data.frame <- function(x, default = 2L, ...)
 {
   plural_forms <- x %>%
-    filter_(~ name == "Plural-Forms") %>%
-    select_(~ value) %>%
+    filter(.data$name == "Plural-Forms") %>%
+    select(.data$value) %>%
     extract2(1)
   if(is_empty(plural_forms)) # e.g., for POT files
   {

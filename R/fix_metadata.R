@@ -88,7 +88,10 @@ fix_metadata.po <- function(x, pkg = ".", clone = TRUE, file_type = x$file_type,
 #' @importFrom assertive.base coerce_to
 #' @importFrom assertive.base merge_dots_with_list
 #' @importFrom devtools as.package
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
 #' @importFrom magrittr %>%
+#' @importFrom magrittr extract2
 #' @export
 fix_metadata.data.frame <- function(x, pkg = ".", file_type, ..., .dots = list())
 {
@@ -111,8 +114,8 @@ fix_metadata.data.frame <- function(x, pkg = ".", file_type, ..., .dots = list()
   if(file_type == "po")
   {
     lang <- x %>%
-      filter_(~ name == "Language") %>%
-      select_(~ value) %>%
+      filter(.data$name == "Language") %>%
+      select(.data$value) %>%
       extract2(1)
     if(is_empty(lang))
     {
@@ -260,7 +263,7 @@ fix_plural_forms <- function(x, lang, newvalue)
   fix_field(x, "Plural-Forms", expected = expected)
 }
 
-#' @importFrom assertive.base bapply
+#' @importFrom purrr map_lgl
 fix_field <- function(x, po_field, expected, pkg, desc_fields = character())
 {
   # If user forced pkg = NULL, don't do anything
@@ -277,7 +280,7 @@ fix_field <- function(x, po_field, expected, pkg, desc_fields = character())
   # and warn otherwise.
   if(length(desc_fields) > 0L)
   {
-    bad <- bapply(pkg[tolower(desc_fields)], is.null)
+    bad <- map_lgl(pkg[tolower(desc_fields)], is.null)
     if(any(bad))
     {
       wrn <- gettextf(
@@ -291,8 +294,8 @@ fix_field <- function(x, po_field, expected, pkg, desc_fields = character())
   }
   # Update field, if necessary
   actual <- x %>%
-    filter_(~ name == po_field) %>%
-    select_(~ value) %>%
+    filter(.data$name == po_field) %>%
+    select(.data$value) %>%
     extract2(1)
   if(actual != expected)
   {

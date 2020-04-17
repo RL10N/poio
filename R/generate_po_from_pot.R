@@ -39,7 +39,7 @@ generate_po_from_pot <- function(x, lang, ...)
 
 #' @importFrom dplyr bind_rows
 #' @importFrom magrittr %>%
-#' @importFrom tibble data_frame
+#' @importFrom tibble tibble
 #' @rdname generate_po_from_pot
 #' @export
 generate_po_from_pot.po <- function(x, lang, ...)

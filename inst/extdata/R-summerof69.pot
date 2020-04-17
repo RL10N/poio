@@ -50,7 +50,7 @@ msgstr[0]    ""
 msgstr[1]    ""
 
 # Testing quote escaping
-msgid "Had a \"band\"" and we tried real hard"
+msgid "Had a \"band\" and we tried real hard"
 msgstr ""
 
 # Obsolete messages can also have other comments
