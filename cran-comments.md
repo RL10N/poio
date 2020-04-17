@@ -1,11 +1,10 @@
 ## Release Summary
 
-This release has a single new feature, allowing users to override metadata in 
-fix_metadata().
+This release fixes warnings caused by upstream changes in the tibble package. 
 
 ## Test Environments
 
-* Local macOS Sierra, R-devel
+* Local macOS Mojave, R-release, R-4.0.0 beta
 * Travis-CI, R-devel and R-release
 * R-hub, R-devel, R-release and R-old-release
 
@@ -17,4 +16,4 @@ R-hub has a NOTE that it found some marked UTF-8 strings. These are country name
 
 ## Downstream dependencies
 
-msgtools modified to work with new version.
+No downstream dependencies.
